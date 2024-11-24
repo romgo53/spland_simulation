@@ -22,4 +22,5 @@ class Settlement {
         private:
             const string name;
             SettlementType type;
+            const string getTypename(SettlementType type) const;
 };
