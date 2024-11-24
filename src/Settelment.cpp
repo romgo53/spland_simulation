@@ -1,20 +1,32 @@
 #include "Settlement.h"
 
-// Constructor
+
 Settlement::Settlement(const string &name, SettlementType type) 
     : name(name), type(type) {}
 
-// Get the settlement's name
 const string &Settlement::getName() const {
-    return name; // Placeholder
+    return name; 
 }
 
-// Get the settlement's type
 SettlementType Settlement::getType() const {
-    return type; // Placeholder
+    return type; 
 }
+const string  Settlement::getTypename(SettlementType type )const{
+    switch (type)
+    {
+    case SettlementType::VILLAGE:
+        return "Village";
+    case SettlementType::CITY:
+        return "City";
+    case SettlementType::METROPOLIS:
+        return "Metropolis"  ;  
 
-// Convert to string representation
+        break;
+    
+    default:
+        break;
+    }
+}
 const string Settlement::toString() const {
-    return ""; // Placeholder
+    return "name: " + name +" Type: " + this->getTypename(type); 
 }
