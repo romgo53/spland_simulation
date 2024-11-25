@@ -1,17 +1,19 @@
 #include "Settlement.h"
 
-
-Settlement::Settlement(const string &name, SettlementType type) 
+Settlement::Settlement(const string &name, SettlementType type)
     : name(name), type(type) {}
 
-const string &Settlement::getName() const {
-    return name; 
+const string &Settlement::getName() const
+{
+    return name;
 }
 
-SettlementType Settlement::getType() const {
-    return type; 
+SettlementType Settlement::getType() const
+{
+    return type;
 }
-const string  Settlement::getTypename(SettlementType type )const{
+const string Settlement::getTypename(SettlementType type) const
+{
     switch (type)
     {
     case SettlementType::VILLAGE:
@@ -19,14 +21,15 @@ const string  Settlement::getTypename(SettlementType type )const{
     case SettlementType::CITY:
         return "City";
     case SettlementType::METROPOLIS:
-        return "Metropolis"  ;  
+        return "Metropolis";
 
         break;
-    
+
     default:
         break;
     }
 }
-const string Settlement::toString() const {
-    return "name: " + name +" Type: " + this->getTypename(type); 
+const string Settlement::toString() const
+{
+    return "name: " + name + " Type: " + this->getTypename(type);
 }
