@@ -1,34 +1,27 @@
-# Compiler and flags
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude
+all: link
 
-# Directories
-SRC_DIR = src
-BIN_DIR = bin
-INCLUDE_DIR = include
+link: compile
+	echo "Linking"
+	g++ -o bin/main bin/main.o bin/Action.o bin/Auxiliary.o bin/Facility.o bin/Plan.o bin/SelectionPolicy.o bin/Settelment.o bin/Simulation.o
 
-# Target executable
-TARGET = $(BIN_DIR)/myProgram
+test: compile-test
+	@echo "Linking tests"
+	g++ -o bin/test bin/testing.o bin/Action.o bin/Auxiliary.o bin/Facility.o bin/Plan.o bin/SelectionPolicy.o bin/Settelment.o bin/Simulation.o
 
-# Source files
-SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
-
-# Object files
-OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.o)
-
-# Default rule: Compile and link
-all: $(TARGET)
-
-# Link object files to create the executable
-$(TARGET): $(OBJECTS)
-	@mkdir -p $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) -o $@ $^
-
-# Compile .cpp files into .o files
-$(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-# Clean rule: Remove all generated files
+compile-test: compile
+	@echo "Compiling tests"
+	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/testing.o src/testing.cpp 
+	
+compile:
+	@echo "Compiling"
+	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/Action.o src/Action.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/Auxiliary.o src/Auxiliary.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/Facility.o src/Facility.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/main.o src/main.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/Plan.o src/Plan.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/SelectionPolicy.o src/SelectionPolicy.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/Settelment.o src/Settelment.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/Simulation.o src/Simulation.cpp
 clean:
-	rm -rf $(BIN_DIR)
+	@echo "Cleaning"
+	rm -rf bin/*
