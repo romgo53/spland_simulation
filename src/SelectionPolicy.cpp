@@ -13,7 +13,7 @@ const FacilityType &NaiveSelection::selectFacility(const vector<FacilityType> &f
 // Need to implament according to the requirements of PrintActionLog in Actions
 const string NaiveSelection::toString() const
 {
-    return "NaiveSelection";
+    return "SelectionPolicy: nve";
 }
 
 NaiveSelection *NaiveSelection::clone() const
@@ -62,7 +62,7 @@ int BalancedSelection::computeDistance(const FacilityType &facility)
 // Need to implament according to the requirements of PrintActionLog in Actions
 const string BalancedSelection::toString() const
 {
-    return "BalancedSelection";
+    return "SelectionPolicy: bal";
 }
 
 BalancedSelection *BalancedSelection::clone() const
@@ -95,7 +95,7 @@ const FacilityType &EconomySelection::selectFacility(const vector<FacilityType> 
 // Need to implament according to the requirements of PrintActionLog in Actions
 const string EconomySelection::toString() const
 {
-    return "EconomySelection";
+    return "SelectionPolicy: eco";
 }
 
 EconomySelection *EconomySelection::clone() const
@@ -129,7 +129,7 @@ const FacilityType &SustainabilitySelection::selectFacility(const vector<Facilit
 // Need to implament according to the requirements of PrintActionLog in Actions
 const string SustainabilitySelection::toString() const
 {
-    return "SustainabilitySelection";
+    return "SelectionPolicy: env";
 }
 
 SustainabilitySelection *SustainabilitySelection::clone() const

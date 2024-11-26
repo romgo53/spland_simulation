@@ -1,82 +1,97 @@
 #include "Facility.h"
 
-
-FacilityType::FacilityType(const string &name, const FacilityCategory category, const int price, 
+FacilityType::FacilityType(const string &name, const FacilityCategory category, const int price,
                            const int lifeQuality_score, const int economy_score, const int environment_score)
     : name(name), category(category), price(price),
       lifeQuality_score(lifeQuality_score), economy_score(economy_score), environment_score(environment_score) {}
 
 const string &FacilityType::getName() const
 {
-    return name; 
+    return name;
 }
 
 int FacilityType::getCost() const
 {
-    return price; 
+    return price;
 }
 
 int FacilityType::getLifeQualityScore() const
 {
-    return lifeQuality_score; 
+    return lifeQuality_score;
 }
 
 int FacilityType::getEnvironmentScore() const
 {
-    return environment_score; 
+    return environment_score;
 }
 
 int FacilityType::getEconomyScore() const
 {
-    return economy_score; 
+    return economy_score;
 }
 
 FacilityCategory FacilityType::getCategory() const
 {
-    return category; 
+    return category;
 }
 
 // Facility
 Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category,
                    const int price, const int lifeQuality_score, const int economy_score, const int environment_score)
-    : FacilityType(name, category, price,  lifeQuality_score, economy_score, environment_score),
-      settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS) ,timeLeft(price) {}
+    : FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score),
+      settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS), timeLeft(price) {}
 
 Facility::Facility(const FacilityType &type, const string &settlementName)
     : FacilityType(type), settlementName(settlementName),
-      status(FacilityStatus::UNDER_CONSTRUCTIONS) ,timeLeft(type.getCost()){}
+      status(FacilityStatus::UNDER_CONSTRUCTIONS), timeLeft(type.getCost()) {}
 
 const string &Facility::getSettlementName() const
 {
-    return settlementName; 
+    return settlementName;
 }
 
 const int Facility::getTimeLeft() const
 {
-    return timeLeft; 
+    return timeLeft;
 }
 
-FacilityStatus Facility::step() {
-    if (timeLeft > 0) {
-        timeLeft--; 
+FacilityStatus Facility::step()
+{
+    if (timeLeft > 0)
+    {
+        timeLeft--;
     }
-    if (timeLeft == 0) {
-        status = FacilityStatus::OPERATIONAL; 
+    if (timeLeft == 0)
+    {
+        status = FacilityStatus::OPERATIONAL;
     }
     return status;
 }
 
 void Facility::setStatus(FacilityStatus status)
 {
-    this->status = status; 
+    this->status = status;
 }
 
 const FacilityStatus &Facility::getStatus() const
 {
-    return status; 
+    return status;
+}
+
+const string Facility::getFacilityStatusName(FacilityStatus status) const
+{
+    switch (status)
+    {
+    case FacilityStatus::UNDER_CONSTRUCTIONS:
+        return "UNDER_CONSTRUCTIONS";
+    case FacilityStatus::OPERATIONAL:
+        return "OPERATIONAL";
+    default:
+        return "";
+    }
 }
 
 const string Facility::toString() const
 {
-    return ""; 
+    return "FacilityName: " + getName() + "\nFaciltyStatus: " + getFacilityStatusName(status);
 }
