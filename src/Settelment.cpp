@@ -31,5 +31,5 @@ const string Settlement::getTypename(SettlementType type) const
 }
 const string Settlement::toString() const
 {
-    return "name: " + name + " Type: " + this->getTypename(type);
+    return "SettlementName: " + name;
 }
