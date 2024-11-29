@@ -1,43 +1,99 @@
 #include "Simulation.h"
-#include "Action.h"
-#include "SelectionPolicy.h"
-
+// TODO: figure out how to implament start, open, close
 // Constructor
 Simulation::Simulation(const string &configFilePath)
     : isRunning(false), planCounter(0)
 {
-    // TODO: Implement loading configuration from the file
+    readConfigFile(configFilePath);
 }
 
-// Start the simulation
+// Read the configuration file
+void Simulation::readConfigFile(const string &configFilePath)
+{
+    std::ifstream file;
+    file.open(configFilePath);
+    string line;
+    while (std::getline(file, line))
+    {
+        vector<string> arguments = Auxiliary::parseArguments(line);
+        if (arguments[0] == "settlement")
+        {
+            const string &name = arguments[1];
+            if (isSettlementExists(name))
+            {
+                // TODO: throw error?
+            }
+            addSettlement(new Settlement(name, SettlementType(stoi(arguments[2]))));
+        }
+        else if (arguments[0] == "facility")
+        {
+            const string &name = arguments[1];
+
+            addFacility(FacilityType(name, FacilityCategory(stoi(arguments[2])), stoi(arguments[3]), stoi(arguments[4]), stoi(arguments[5]), stoi(arguments[6])));
+        }
+        else if (arguments[0] == "plan")
+        {
+            readPlanConfig(arguments[1], arguments[2]);
+        }
+    }
+}
+
+// Read the plan configuration
+void Simulation::readPlanConfig(string settName, string policyName)
+{
+    Settlement *settlement = getSettlement(settName);
+    SelectionPolicy *selectionPolicy;
+    if (policyName == "nve")
+    {
+        selectionPolicy = new NaiveSelection();
+    }
+    else if (policyName == "bal")
+    {
+        selectionPolicy = new BalancedSelection(0, 0, 0);
+    }
+    else if (policyName == "eco")
+    {
+        selectionPolicy = new EconomySelection();
+    }
+    else if (policyName == "env")
+    {
+        selectionPolicy = new SustainabilitySelection();
+    }
+    else
+    {
+        // TODO: throw error?
+    }
+    addPlan(*settlement, selectionPolicy);
+}
+
+// Start the simulation??
 void Simulation::start()
 {
-    isRunning = true; // Placeholder for starting logic
+    isRunning = true;
 }
 
 // Add a new plan
 void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy)
 {
-    // TODO: Implement adding a plan
+    plans.push_back(Plan(planCounter++, settlement, selectionPolicy, facilitiesOptions));
 }
 
-// Add an action to the log
 void Simulation::addAction(BaseAction *action)
 {
-    actionsLog.push_back(action); // Placeholder for adding an action
+    actionsLog.push_back(action);
 }
 
 // Add a new settlement
 bool Simulation::addSettlement(Settlement *settlement)
 {
-    settlements.push_back(settlement); // Placeholder for adding a settlement
+    settlements.push_back(settlement);
     return true;
 }
 
 // Add a new facility
 bool Simulation::addFacility(FacilityType facility)
 {
-    facilitiesOptions.push_back(facility); // Placeholder for adding a facility
+    facilitiesOptions.push_back(facility);
     return true;
 }
 
@@ -55,12 +111,13 @@ bool Simulation::isSettlementExists(const string &settlementName)
 }
 
 // Get a plan by ID
+// TODO: implement getPlanId method in Plan class...
 Plan &Simulation::getPlan(const int planID)
 {
     for (auto &plan : plans)
     {
-        if (planID == plan.getlifeQualityScore())
-        { // Placeholder condition
+        if (planID == 0)
+        {
             return plan;
         }
     }
@@ -69,17 +126,19 @@ Plan &Simulation::getPlan(const int planID)
 // Perform a simulation step
 void Simulation::step()
 {
-    // TODO: Implement simulation step
+    for (Plan &plan : plans)
+    {
+        plan.step();
+    }
 }
-
-// Close the simulation
+// Close what? maybe it should call the destructor?
 void Simulation::close()
 {
-    isRunning = false; // Placeholder for close logic
+    isRunning = false;
 }
 
-// Open the simulation
+// Open the simulation??? maybe open backup?
 void Simulation::open()
 {
-    isRunning = true; // Placeholder for open logic
+    isRunning = true;
 }

@@ -1,9 +1,15 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <iostream>
+#include <fstream>
 #include "Facility.h"
+#include "Auxiliary.h"
 #include "Plan.h"
+#include "Action.h"
+#include "SelectionPolicy.h"
 #include "Settlement.h"
+using std::stoi;
 using std::string;
 using std::vector;
 
@@ -33,4 +39,6 @@ private:
     vector<Plan> plans;
     vector<Settlement *> settlements;
     vector<FacilityType> facilitiesOptions;
+    void readConfigFile(const string &configFilePath);
+    void readPlanConfig(string settName, string policyName);
 };
