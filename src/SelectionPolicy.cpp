@@ -40,6 +40,9 @@ const FacilityType &BalancedSelection::selectFacility(const vector<FacilityType>
             minDistanceIndex = i;
         }
     }
+    LifeQualityScore += facilitiesOptions[minDistanceIndex].getLifeQualityScore();
+    EconomyScore += facilitiesOptions[minDistanceIndex].getEconomyScore();
+    EnvironmentScore += facilitiesOptions[minDistanceIndex].getEnvironmentScore();
     return facilitiesOptions[minDistanceIndex];
 }
 
