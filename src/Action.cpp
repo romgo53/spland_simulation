@@ -3,19 +3,38 @@
 
 // BaseAction
 BaseAction::BaseAction() {}
-ActionStatus BaseAction::getStatus() const { return ActionStatus::ERROR; }
-void BaseAction::complete() {}
-void BaseAction::error(string errorMsg) {}
+ActionStatus BaseAction::getStatus() const { return status; }
+void BaseAction::complete()
+{
+    status = ActionStatus::COMPLETED;
+}
+void BaseAction::error(string errorMsg)
+{
+    status = ActionStatus::ERROR;
+    this->errorMsg = errorMsg;
+}
 const string &BaseAction::getErrorMsg() const { return errorMsg; }
 
 // SimulateStep
 SimulateStep::SimulateStep(const int numOfSteps) : numOfSteps(numOfSteps) {}
-void SimulateStep::act(Simulation &simulation) {}
-const string SimulateStep::toString() const { return ""; }
-SimulateStep *SimulateStep::clone() const { return new SimulateStep(*this); }
+void SimulateStep::act(Simulation &simulation)
+{
+    for (int i = 0; i < numOfSteps; i++)
+    {
+        simulation.step();
+    }
+}
+const string SimulateStep::toString() const
+{
+    return "SimulateStep " + std::to_string(numOfSteps);
+}
+SimulateStep *SimulateStep::clone() const
+{
+    return new SimulateStep(*this);
+}
 
 // AddPlan
-AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy) 
+AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy)
     : settlementName(settlementName), selectionPolicy(selectionPolicy) {}
 void AddPlan::act(Simulation &simulation) {
     if (!simulation.isSettlementExists(settlementName)) {
@@ -54,8 +73,6 @@ const string AddPlan::toString() const {
 AddPlan *AddPlan::clone() const { return new AddPlan(*this); }
 
 // AddSettlement
-
-
 AddSettlement::AddSettlement(const string &settlementName, SettlementType settlementType) 
     : settlementName(settlementName), settlementType(settlementType) {}
 
@@ -93,10 +110,10 @@ const string AddSettlement::toString() const {
 
 
 // AddFacility
-AddFacility::AddFacility(const string &facilityName, const FacilityCategory facilityCategory, 
+AddFacility::AddFacility(const string &facilityName, const FacilityCategory facilityCategory,
                          const int price, const int lifeQualityScore, const int economyScore, const int environmentScore)
-    : facilityName(facilityName), facilityCategory(facilityCategory), 
-      price(price), lifeQualityScore(lifeQualityScore), 
+    : facilityName(facilityName), facilityCategory(facilityCategory),
+      price(price), lifeQualityScore(lifeQualityScore),
       economyScore(economyScore), environmentScore(environmentScore) {}
 void AddFacility::act(Simulation &simulation) {}
 AddFacility *AddFacility::clone() const { return new AddFacility(*this); }
@@ -109,7 +126,7 @@ PrintPlanStatus *PrintPlanStatus::clone() const { return new PrintPlanStatus(*th
 const string PrintPlanStatus::toString() const { return ""; }
 
 // ChangePlanPolicy
-ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy) 
+ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy)
     : planId(planId), newPolicy(newPolicy) {}
 void ChangePlanPolicy::act(Simulation &simulation) {}
 ChangePlanPolicy *ChangePlanPolicy::clone() const { return new ChangePlanPolicy(*this); }
@@ -138,4 +155,3 @@ RestoreSimulation::RestoreSimulation() {}
 void RestoreSimulation::act(Simulation &simulation) {}
 RestoreSimulation *RestoreSimulation::clone() const { return new RestoreSimulation(*this); }
 const string RestoreSimulation::toString() const { return ""; }
-
