@@ -17,16 +17,80 @@ SimulateStep *SimulateStep::clone() const { return new SimulateStep(*this); }
 // AddPlan
 AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy) 
     : settlementName(settlementName), selectionPolicy(selectionPolicy) {}
-void AddPlan::act(Simulation &simulation) {}
-const string AddPlan::toString() const { return ""; }
+void AddPlan::act(Simulation &simulation) {
+    if (!simulation.isSettlementExists(settlementName)) {
+        error("Cannot create this plan: settlement does not exist.");
+        return;
+    }
+
+    SelectionPolicy *policy = nullptr;
+    if (selectionPolicy == "nve") {
+        policy = new NaiveSelection();
+    } else if (selectionPolicy == "bal") {
+        policy = new BalancedSelection(0, 0, 0);
+    } else if (selectionPolicy == "eco") {
+        policy = new EconomySelection();
+    } else if (selectionPolicy == "env") {
+        policy = new SustainabilitySelection();
+    } else {
+        error("Cannot create this plan: invalid selection policy.");
+        return;
+    }
+
+    try {
+        Settlement* settlement = simulation.getSettlement(settlementName);
+        simulation.addPlan(*settlement, policy);
+        complete();
+    } catch (const std::exception &e) {
+        error("Cannot create this plan: " + string(e.what()));
+        delete policy;
+    }
+}
+
+const string AddPlan::toString() const {
+    return "AddPlan: SettlementName = " + settlementName + ", SelectionPolicy = " + selectionPolicy;
+}
+
 AddPlan *AddPlan::clone() const { return new AddPlan(*this); }
 
 // AddSettlement
+
+
 AddSettlement::AddSettlement(const string &settlementName, SettlementType settlementType) 
     : settlementName(settlementName), settlementType(settlementType) {}
-void AddSettlement::act(Simulation &simulation) {}
-AddSettlement *AddSettlement::clone() const { return new AddSettlement(*this); }
-const string AddSettlement::toString() const { return ""; }
+
+void AddSettlement::act(Simulation &simulation) {
+    if (simulation.isSettlementExists(settlementName)) {
+        error("Settlement already exists");
+        return;
+    }
+    
+    Settlement *newSettlement = new Settlement(settlementName, settlementType);
+    
+    try {
+        if (simulation.addSettlement(newSettlement)) {
+            complete();
+        } else {
+            error("Failed to add settlement");
+            delete newSettlement;
+        }
+    } catch (const std::exception &e) {
+        error("Failed to add settlement: " + string(e.what()));
+        delete newSettlement;
+    }
+}
+
+
+AddSettlement *AddSettlement::clone() const {
+    return new AddSettlement(*this);
+}
+
+const string AddSettlement::toString() const {
+    return "AddSettlement: " + settlementName + " (" + 
+           (settlementType == SettlementType::VILLAGE ? "Village" :
+           settlementType == SettlementType::CITY ? "City" : "Metropolis") + ")";
+}
+
 
 // AddFacility
 AddFacility::AddFacility(const string &facilityName, const FacilityCategory facilityCategory, 
