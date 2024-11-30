@@ -40,5 +40,6 @@ private:
     vector<Settlement *> settlements;
     vector<FacilityType> facilitiesOptions;
     void readConfigFile(const string &configFilePath);
+    bool isFacilityExists(const string &facilityName);
     void readPlanConfig(string settName, string policyName);
 };

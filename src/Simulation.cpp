@@ -97,13 +97,33 @@ void Simulation::addAction(BaseAction *action)
 // Add a new settlement
 bool Simulation::addSettlement(Settlement *settlement)
 {
+    if (isSettlementExists(settlement->getName()))
+    {
+        return false;
+    }
     settlements.push_back(settlement);
     return true;
+}
+
+bool Simulation::isFacilityExists(const string &facilityName)
+{
+    for (const auto &facility : facilitiesOptions)
+    {
+        if (facility.getName() == facilityName)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Add a new facility
 bool Simulation::addFacility(FacilityType facility)
 {
+    if (isFacilityExists(facility.getName()))
+    {
+        return false;
+    }
     facilitiesOptions.push_back(facility);
     return true;
 }
