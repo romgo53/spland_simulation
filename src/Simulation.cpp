@@ -71,7 +71,18 @@ void Simulation::start()
 {
     isRunning = true;
 }
-
+// get a settlement by name
+Settlement *Simulation::getSettlement(const string &settlementName)
+{
+    for (auto &settlement : settlements)
+    {
+        if (settlement->getName() == settlementName)
+        {
+            return settlement;
+        }
+    }
+    return nullptr;
+}
 // Add a new plan
 void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy)
 {
