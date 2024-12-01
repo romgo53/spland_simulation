@@ -182,3 +182,18 @@ void Simulation::open()
 {
     isRunning = true;
 }
+void Simulation::printActionsLog() const
+{
+    for (const auto &action : actionsLog)
+    {
+        std::cout << action->toString() << std::endl;
+    }
+}
+
+void Simulation::printPlansStatuses() const
+{
+    for (const auto &plan : plans)
+    {
+        plan.printStatus();
+    }
+}

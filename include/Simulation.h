@@ -25,12 +25,14 @@ public:
     bool isPlanExists(int planID);
     bool addSettlement(Settlement *settlement);
     bool addFacility(FacilityType facility);
+    void printPlansStatuses() const;
     bool isSettlementExists(const string &settlementName);
     Settlement *getSettlement(const string &settlementName);
     Plan &getPlan(const int planID);
     void step();
     void close();
     void open();
+    void printActionsLog() const;
 
 private:
     bool isRunning;

@@ -69,22 +69,14 @@ void AddPlan::act(Simulation &simulation)
         return;
     }
 
-    try
-    {
-        Settlement *settlement = simulation.getSettlement(settlementName);
-        simulation.addPlan(*settlement, policy);
-        complete();
-    }
-    catch (const std::exception &e)
-    {
-        error("Cannot create this plan: " + string(e.what()));
-        delete policy;
-    }
+    Settlement *settlement = simulation.getSettlement(settlementName);
+    simulation.addPlan(*settlement, policy);
+    complete();
 }
 
 const string AddPlan::toString() const
 {
-    return "AddPlan: SettlementName = " + settlementName + ", SelectionPolicy = " + selectionPolicy;
+    return "AddPlan: SettlementName = " + settlementName + ", SelectionPolicy = " + selectionPolicy + (getStatus() == ActionStatus::ERROR ? " ERROR" : " COMPLETED");
 }
 
 AddPlan *AddPlan::clone() const { return new AddPlan(*this); }
@@ -103,21 +95,13 @@ void AddSettlement::act(Simulation &simulation)
 
     Settlement *newSettlement = new Settlement(settlementName, settlementType);
 
-    try
+    if (simulation.addSettlement(newSettlement))
     {
-        if (simulation.addSettlement(newSettlement))
-        {
-            complete();
-        }
-        else
-        {
-            error("Failed to add settlement");
-            delete newSettlement;
-        }
+        complete();
     }
-    catch (const std::exception &e)
+    else
     {
-        error("Failed to add settlement: " + string(e.what()));
+        error("Failed to add settlement");
         delete newSettlement;
     }
 }
@@ -129,10 +113,8 @@ AddSettlement *AddSettlement::clone() const
 
 const string AddSettlement::toString() const
 {
-    return "AddSettlement: " + settlementName + " (" +
-           (settlementType == SettlementType::VILLAGE ? "Village" : settlementType == SettlementType::CITY ? "City"
-                                                                                                           : "Metropolis") +
-           ")";
+    int type = static_cast<int>(settlementType);
+    return "AddSettlement: " + settlementName + " " + to_string(type) + (getStatus() == ActionStatus::ERROR ? " ERROR" : " COMPLETED");
 }
 
 // AddFacility
@@ -199,21 +181,60 @@ const string PrintPlanStatus::toString() const
 // ChangePlanPolicy
 ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy)
     : planId(planId), newPolicy(newPolicy) {}
-void ChangePlanPolicy::act(Simulation &simulation) {}
+void ChangePlanPolicy::act(Simulation &simulation)
+{
+    Plan &plan = simulation.getPlan(planId);
+    SelectionPolicy *policy = nullptr;
+    if (newPolicy == "nve")
+    {
+        policy = new NaiveSelection();
+    }
+    else if (newPolicy == "bal")
+    {
+        policy = new BalancedSelection(0, 0, 0); // Adjust scores as needed
+    }
+    else if (newPolicy == "eco")
+    {
+        policy = new EconomySelection();
+    }
+    else if (newPolicy == "env")
+    {
+        policy = new SustainabilitySelection();
+    }
+    else
+    {
+        error("Cannot change selection policy: invalid policy.");
+        return;
+    }
+    plan.setSelectionPolicy(policy);
+    complete();
+}
 ChangePlanPolicy *ChangePlanPolicy::clone() const { return new ChangePlanPolicy(*this); }
-const string ChangePlanPolicy::toString() const { return ""; }
+const string ChangePlanPolicy::toString() const
+{
+    return "ChangePlanPolicy " + to_string(planId) + " " + newPolicy + (getStatus() == ActionStatus::ERROR ? " ERROR" : " COMPLETED");
+}
 
 // PrintActionsLog
 PrintActionsLog::PrintActionsLog() {}
-void PrintActionsLog::act(Simulation &simulation) {}
+void PrintActionsLog::act(Simulation &simulation)
+{
+    simulation.printActionsLog();
+    complete();
+}
 PrintActionsLog *PrintActionsLog::clone() const { return new PrintActionsLog(*this); }
-const string PrintActionsLog::toString() const { return ""; }
+const string PrintActionsLog::toString() const { return "PrintActionLog COMPLETED"; }
 
 // Close
 Close::Close() {}
-void Close::act(Simulation &simulation) {}
+void Close::act(Simulation &simulation)
+{
+    simulation.close();
+    simulation.printPlansStatuses();
+    complete();
+}
 Close *Close::clone() const { return new Close(*this); }
-const string Close::toString() const { return ""; }
+const string Close::toString() const { return "Close COMPLETED"; }
 
 // BackupSimulation
 BackupSimulation::BackupSimulation() {}
