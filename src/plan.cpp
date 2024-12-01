@@ -15,65 +15,36 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
       facilities(),
       underConstruction() {}
 
-Plan::Plan(const Plan &other)
+Plan::Plan(Plan &&other) noexcept
     : plan_id(other.plan_id),
       settlement(other.settlement),
-      selectionPolicy(other.selectionPolicy ? other.selectionPolicy->clone() : nullptr),
+      selectionPolicy(other.selectionPolicy),
+      status(other.status),
+      facilities(std::move(other.facilities)),
+      underConstruction(std::move(other.underConstruction)),
       facilityOptions(other.facilityOptions),
       life_quality_score(other.life_quality_score),
       economy_score(other.economy_score),
-      environment_score(other.environment_score),
-      status(other.status)
+      environment_score(other.environment_score)
 {
-    for (Facility *facility : other.facilities)
-    {
-        facilities.push_back(new Facility(*facility));
-    }
-    for (Facility *facility : other.underConstruction)
-    {
-        underConstruction.push_back(new Facility(*facility));
-    }
+    other.selectionPolicy = nullptr;
 }
 
-Plan &Plan::operator=(const Plan &other)
+Plan::~Plan()
 {
-    if (this == &other)
-    {
-        return *this;
-    }
     delete selectionPolicy;
+
     for (Facility *facility : facilities)
     {
         delete facility;
     }
+    facilities.clear();
+
     for (Facility *facility : underConstruction)
     {
         delete facility;
     }
-
-    plan_id = other.plan_id;
-    selectionPolicy = other.selectionPolicy ? other.selectionPolicy->clone() : nullptr;
-    life_quality_score = other.life_quality_score;
-    economy_score = other.economy_score;
-    environment_score = other.environment_score;
-    status = other.status;
-
-    for (Facility *facility : other.facilities)
-    {
-        facilities.push_back(new Facility(*facility));
-    }
-    for (Facility *facility : other.underConstruction)
-    {
-        underConstruction.push_back(new Facility(*facility));
-    }
-
-    return *this;
-}
-
-// destructor
-Plan::~Plan()
-{
-    delete selectionPolicy;
+    underConstruction.clear();
 }
 
 // Getters for scores
@@ -95,6 +66,10 @@ const int Plan::getEnvironmentScore() const
 // Set selection policy
 void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy)
 {
+    if (selectionPolicy)
+    {
+        delete selectionPolicy;
+    }
     this->selectionPolicy = selectionPolicy; // Placeholder
 }
 
