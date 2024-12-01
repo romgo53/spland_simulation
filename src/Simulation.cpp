@@ -101,9 +101,25 @@ bool Simulation::addSettlement(Settlement *settlement)
     return true;
 }
 
+bool Simulation::isFacilityExists(const string &facilityName)
+{
+    for (const auto &facility : facilitiesOptions)
+    {
+        if (facility.getName() == facilityName)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 // Add a new facility
 bool Simulation::addFacility(FacilityType facility)
 {
+    if (isFacilityExists(facility.getName()))
+    {
+        return false;
+    }
     facilitiesOptions.push_back(facility);
     return true;
 }
@@ -121,13 +137,25 @@ bool Simulation::isSettlementExists(const string &settlementName)
     return false;
 }
 
+// Check if a plan exists
+bool Simulation::isPlanExists(int planID)
+{
+    for (const auto &plan : plans)
+    {
+        if (plan.getPlanId() == planID)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 // Get a plan by ID
-// TODO: implement getPlanId method in Plan class...
 Plan &Simulation::getPlan(const int planID)
 {
     for (auto &plan : plans)
     {
-        if (planID == 0)
+        if (planID == plan.getPlanId())
         {
             return plan;
         }

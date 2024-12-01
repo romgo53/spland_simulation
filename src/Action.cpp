@@ -12,6 +12,7 @@ void BaseAction::error(string errorMsg)
 {
     status = ActionStatus::ERROR;
     this->errorMsg = errorMsg;
+    std::cout << errorMsg << std::endl;
 }
 const string &BaseAction::getErrorMsg() const { return errorMsg; }
 
@@ -23,10 +24,11 @@ void SimulateStep::act(Simulation &simulation)
     {
         simulation.step();
     }
+    complete();
 }
 const string SimulateStep::toString() const
 {
-    return "SimulateStep " + std::to_string(numOfSteps);
+    return "SimulateStep " + to_string(numOfSteps) + " COMPLETE";
 }
 SimulateStep *SimulateStep::clone() const
 {
@@ -115,15 +117,60 @@ AddFacility::AddFacility(const string &facilityName, const FacilityCategory faci
     : facilityName(facilityName), facilityCategory(facilityCategory),
       price(price), lifeQualityScore(lifeQualityScore),
       economyScore(economyScore), environmentScore(environmentScore) {}
-void AddFacility::act(Simulation &simulation) {}
+void AddFacility::act(Simulation &simulation)
+{
+    FacilityType facilityType(facilityName, facilityCategory, price, lifeQualityScore, economyScore, environmentScore);
+
+    bool res = simulation.addFacility(facilityType);
+    if (!res)
+    {
+        error("Facility already exists");
+        return;
+    }
+    else
+    {
+        complete();
+    }
+}
 AddFacility *AddFacility::clone() const { return new AddFacility(*this); }
-const string AddFacility::toString() const { return ""; }
+const string AddFacility::toString() const
+{
+    string rtn = "AddFacility " + facilityName + to_string(price) + to_string(lifeQualityScore) + to_string(economyScore) + to_string(environmentScore);
+
+    if (getStatus() == ActionStatus::ERROR)
+    {
+        return rtn + " ERROR";
+    }
+    else
+    {
+        return rtn + " COMPLETED";
+    }
+}
 
 // PrintPlanStatus
 PrintPlanStatus::PrintPlanStatus(int planId) : planId(planId) {}
-void PrintPlanStatus::act(Simulation &simulation) {}
+void PrintPlanStatus::act(Simulation &simulation)
+{
+    if (!simulation.isPlanExists(planId))
+    {
+        error("Plan does not exist");
+        return;
+    }
+    Plan &plan = simulation.getPlan(planId);
+    plan.printStatus();
+}
 PrintPlanStatus *PrintPlanStatus::clone() const { return new PrintPlanStatus(*this); }
-const string PrintPlanStatus::toString() const { return ""; }
+const string PrintPlanStatus::toString() const
+{
+    if (getStatus() == ActionStatus::ERROR)
+    {
+        return "PrintPlanStatus " + to_string(planId) + " ERROR";
+    }
+    else
+    {
+        return "PrintPlanStatus " + to_string(planId) + " COMPLETED";
+    }
+}
 
 // ChangePlanPolicy
 ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy)
