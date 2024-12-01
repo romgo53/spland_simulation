@@ -15,55 +15,37 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
       facilities(),
       underConstruction() {}
 
-Plan::Plan(const Plan &other)
-    : plan_id(other.plan_id), 
-      settlement(other.settlement), 
-      selectionPolicy(other.selectionPolicy ? other.selectionPolicy->clone() : nullptr),
+Plan::Plan(Plan &&other) noexcept
+    : plan_id(other.plan_id),
+      settlement(other.settlement),
+      selectionPolicy(other.selectionPolicy),
+      status(other.status),
+      facilities(std::move(other.facilities)),
+      underConstruction(std::move(other.underConstruction)),
       facilityOptions(other.facilityOptions),
       life_quality_score(other.life_quality_score),
       economy_score(other.economy_score),
-      environment_score(other.environment_score),
-      status(other.status) {
-    for (Facility* facility : other.facilities) {
-        facilities.push_back(new Facility(*facility)); 
-    }
-    for (Facility* facility : other.underConstruction) {
-        underConstruction.push_back(new Facility(*facility)); 
-    }
+      environment_score(other.environment_score) {
+    other.selectionPolicy = nullptr;
 }
 
-Plan& Plan::operator=(const Plan &other) {
-    if (this == &other) {
-        return *this; 
-    }
+
+
+
+Plan::~Plan() {
     delete selectionPolicy;
+
     for (Facility* facility : facilities) {
         delete facility;
     }
+    facilities.clear();
+
     for (Facility* facility : underConstruction) {
         delete facility;
     }
-
-    plan_id = other.plan_id;
-    selectionPolicy = other.selectionPolicy ? other.selectionPolicy->clone() : nullptr;
-    life_quality_score = other.life_quality_score;
-    economy_score = other.economy_score;
-    environment_score = other.environment_score;
-    status = other.status;
-
-    for (Facility* facility : other.facilities) {
-        facilities.push_back(new Facility(*facility));
-    }
-    for (Facility* facility : other.underConstruction) {
-        underConstruction.push_back(new Facility(*facility));}
-
-    return *this;
+    underConstruction.clear();
 }
 
-//destructor
-Plan::~Plan() {
-    delete selectionPolicy;
-}
 
 
 // Getters for scores
@@ -85,6 +67,9 @@ const int Plan::getEnvironmentScore() const
 // Set selection policy
 void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy)
 {
+     if (selectionPolicy) {  
+        delete selectionPolicy; 
+    }
     this->selectionPolicy = selectionPolicy; // Placeholder
 }
 
