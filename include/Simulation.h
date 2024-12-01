@@ -23,6 +23,7 @@ public:
     void start();
     void addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy);
     void addAction(BaseAction *action);
+    bool isPlanExists(int planID);
     bool addSettlement(Settlement *settlement);
     bool addFacility(FacilityType facility);
     bool isSettlementExists(const string &settlementName);
@@ -41,4 +42,5 @@ private:
     vector<FacilityType> facilitiesOptions;
     void readConfigFile(const string &configFilePath);
     void readPlanConfig(string settName, string policyName);
+    bool isFacilityExists(const string &facilityName);
 };
