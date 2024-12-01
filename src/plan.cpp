@@ -1,4 +1,5 @@
 #include "Plan.h"
+#include "Settlement.h"
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -66,12 +67,13 @@ const int Plan::getEnvironmentScore() const
 // Set selection policy
 void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy)
 {
-    if (selectionPolicy)
-    {
-        delete selectionPolicy;
+    if (this->selectionPolicy == selectionPolicy) {
+        return; // Avoid redundant operations if they are the same
     }
-    this->selectionPolicy = selectionPolicy; // Placeholder
+    delete this->selectionPolicy; // Delete the old policy safely
+    this->selectionPolicy = selectionPolicy;
 }
+
 
 // Step function
 void Plan::step()
@@ -119,8 +121,6 @@ const int Plan::getPlanId() const
 // Print status
 void Plan::printStatus()
 {
-    std::cout << "PlanID: " << plan_id << std::endl;
-    std::cout << "SettlementName: " << settlement.getName() << std::endl;
     std::cout << "PlanStatus: " << (status == PlanStatus::AVALIABLE ? "AVAILABLE" : "BUSY") << std::endl;
     std::cout << "SelectionPolicy: " << selectionPolicy->toString() << std::endl;
     std::cout << "LifeQualityScore: " << life_quality_score << std::endl;
@@ -128,14 +128,14 @@ void Plan::printStatus()
     std::cout << "EnvironmentScore: " << environment_score << std::endl;
 
     std::cout << "Facilities under construction:" << std::endl;
-    for (const Facility *facility : underConstruction)
+    for (const Facility* facility : underConstruction)
     {
         std::cout << "FacilityName: " << facility->getName() << std::endl;
         std::cout << "FacilityStatus: " << (facility->getStatus() == FacilityStatus::UNDER_CONSTRUCTIONS ? "UNDER_CONSTRUCTIONS" : "OPERATIONAL") << std::endl;
     }
 
     std::cout << "Operational facilities:" << std::endl;
-    for (const Facility *facility : facilities)
+    for (const Facility* facility : facilities)
     {
         std::cout << "FacilityName: " << facility->getName() << std::endl;
         std::cout << "FacilityStatus: " << (facility->getStatus() == FacilityStatus::UNDER_CONSTRUCTIONS ? "UNDER_CONSTRUCTIONS" : "OPERATIONAL") << std::endl;

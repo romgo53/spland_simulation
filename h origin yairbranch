@@ -1,0 +1,32 @@
+[33m5fdc12e[m[33m ([m[1;36mHEAD -> [m[1;32myairbranch[m[33m, [m[1;31morigin/yairbranch[m[33m)[m Updated main and plan logic
+[33m9d7d8cb[m[33m ([m[1;32mmain[m[33m)[m Save local changes after stash apply
+[33m4abe4bf[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #12 from romgo53/rom/addFacilityAction
+[33mcedd165[m Merge branch 'main' into rom/addFacilityAction
+[33m3dea976[m added actions
+[33mcd85278[m Merge pull request #11 from romgo53/yairbranch
+[33md089430[m[33m ([m[1;32mmy-feature-branch[m[33m)[m Merge branch 'main' of https://github.com/romgo53/spland_simulation
+[33md102b0f[m Save local changes before pulling
+[33m650becb[m Merge pull request #10 from romgo53/rom/actionClasses
+[33m32a13a0[m added actions, implenmented getSettelment and fixed settelment header
+[33m910fab2[m Merge pull request #8 from romgo53/yairbranch
+[33m8fcaac4[m Merge branch 'main' of https://github.com/romgo53/spland_simulation
+[33mf7b6d48[m Merge pull request #9 from romgo53/rom/simulation
+[33ma5ac0ac[m Implemented simulation class, we need to clarify few thing over zoom
+[33m57245d8[m Updated Plan implementation and adjusted Settelment logic
+[33mc2bdc98[m Merge pull request #7 from romgo53/rom/add-toString
+[33m78cdbf2[m added relevant toString methods
+[33m489a321[m Merge pull request #6 from romgo53/yairbranch
+[33me45376d[m Updated Facility implementation
+[33mab2a90f[m Merge pull request #5 from romgo53/rom/add-selectionPolicy-class
+[33m9a2b235[m Added newline
+[33m59ee4e2[m Added selectionPolicy class
+[33mfce363f[m Merge pull request #4 from romgo53/rom/setting-up-tests-and-apply-notes
+[33m1e85461[m added newline
+[33m0ebc283[m added newlines
+[33m9120912[m Changed makefile and added test command and applied notes
+[33m640bdc6[m Merge pull request #3 from romgo53/yairbranch
+[33m7509bc4[m added settelment
+[33mbe40b96[m Merge pull request #2 from romgo53/yairbranch
+[33m331a1bd[m message
+[33m6a9b39f[m added .gitignore
+[33m2abce68[m Added skeleton

@@ -69,17 +69,9 @@ void AddPlan::act(Simulation &simulation)
         return;
     }
 
-    try
-    {
-        Settlement *settlement = simulation.getSettlement(settlementName);
+   Settlement* settlement = simulation.getSettlement(settlementName);
         simulation.addPlan(*settlement, policy);
         complete();
-    }
-    catch (const std::exception &e)
-    {
-        error("Cannot create this plan: " + string(e.what()));
-        delete policy;
-    }
 }
 
 const string AddPlan::toString() const
@@ -102,11 +94,8 @@ void AddSettlement::act(Simulation &simulation)
     }
 
     Settlement *newSettlement = new Settlement(settlementName, settlementType);
-
-    try
-    {
-        if (simulation.addSettlement(newSettlement))
-        {
+    
+    if (simulation.addSettlement(newSettlement)) {
             complete();
         }
         else
@@ -114,12 +103,6 @@ void AddSettlement::act(Simulation &simulation)
             error("Failed to add settlement");
             delete newSettlement;
         }
-    }
-    catch (const std::exception &e)
-    {
-        error("Failed to add settlement: " + string(e.what()));
-        delete newSettlement;
-    }
 }
 
 AddSettlement *AddSettlement::clone() const
@@ -199,13 +182,33 @@ const string PrintPlanStatus::toString() const
 // ChangePlanPolicy
 ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy)
     : planId(planId), newPolicy(newPolicy) {}
-void ChangePlanPolicy::act(Simulation &simulation) {}
+void ChangePlanPolicy::act(Simulation &simulation) {
+        Plan &plan = simulation.getPlan(planId);
+        SelectionPolicy *policy = nullptr;
+        if (newPolicy == "nve") {
+            policy = new NaiveSelection();
+        } else if (newPolicy == "bal") {
+            policy = new BalancedSelection(0, 0, 0); // Adjust scores as needed
+        } else if (newPolicy == "eco") {
+            policy = new EconomySelection();
+        } else if (newPolicy == "env") {
+            policy = new SustainabilitySelection();
+        } else {
+            error("Cannot change selection policy: invalid policy.");
+            return;
+        }
+         plan.setSelectionPolicy(policy);
+        complete();
+}
 ChangePlanPolicy *ChangePlanPolicy::clone() const { return new ChangePlanPolicy(*this); }
 const string ChangePlanPolicy::toString() const { return ""; }
 
 // PrintActionsLog
 PrintActionsLog::PrintActionsLog() {}
-void PrintActionsLog::act(Simulation &simulation) {}
+void PrintActionsLog::act(Simulation &simulation) {
+    simulation.printActionsLog(); // 
+    complete(); // 
+}
 PrintActionsLog *PrintActionsLog::clone() const { return new PrintActionsLog(*this); }
 const string PrintActionsLog::toString() const { return ""; }
 

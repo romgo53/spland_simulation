@@ -31,6 +31,7 @@ public:
     void step();
     void close();
     void open();
+    void printActionsLog() const;
 
 private:
     bool isRunning;
