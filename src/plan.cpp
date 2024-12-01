@@ -76,9 +76,9 @@ void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy)
 // Step function
 void Plan::step()
 {
+    unsigned int constructionLimit = settlement.getConstructionLimit();
     if (status == PlanStatus::AVALIABLE)
     {
-        int constructionLimit = settlement.getConstructionLimit();
         while (underConstruction.size() < constructionLimit)
         {
             const FacilityType &nextFacility = selectionPolicy->selectFacility(facilityOptions);
@@ -100,8 +100,7 @@ void Plan::step()
             ++it;
         }
     }
-
-    if (underConstruction.size() == settlement.getConstructionLimit())
+    if (underConstruction.size() == constructionLimit)
     {
         status = PlanStatus::BUSY;
     }

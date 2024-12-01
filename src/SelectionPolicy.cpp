@@ -31,7 +31,7 @@ const FacilityType &BalancedSelection::selectFacility(const vector<FacilityType>
     // Max value
     int minDistance = 2147483647;
     int minDistanceIndex = 0;
-    for (int i = 0; i < facilitiesOptions.size(); i++)
+    for (unsigned int i = 0; i < facilitiesOptions.size(); i++)
     {
         int distance = computeDistance(facilitiesOptions[i]);
         if (distance < minDistance)
@@ -84,7 +84,7 @@ const FacilityType &EconomySelection::selectFacility(const vector<FacilityType> 
     {
         lastSelectedIndex = 0;
     }
-    for (int i = lastSelectedIndex; i < facilitiesOptions.size(); i++)
+    for (unsigned int i = lastSelectedIndex; i < facilitiesOptions.size(); i++)
     {
         if (facilitiesOptions[i].getCategory() == FacilityCategory::ECONOMY)
         {
@@ -117,7 +117,7 @@ const FacilityType &SustainabilitySelection::selectFacility(const vector<Facilit
     {
         lastSelectedIndex = 0;
     }
-    for (int i = lastSelectedIndex; i < facilitiesOptions.size(); i++)
+    for (unsigned int i = lastSelectedIndex; i < facilitiesOptions.size(); i++)
     {
         if (facilitiesOptions[i].getCategory() == FacilityCategory::ENVIRONMENT)
         {

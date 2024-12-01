@@ -1,6 +1,7 @@
 #include "Simulation.h"
 // TODO: figure out how to implament start, open, close
 // Constructor
+
 Simulation::Simulation(const string &configFilePath)
     : isRunning(false), planCounter(0)
 {
@@ -74,7 +75,7 @@ void Simulation::start()
 // get a settlement by name
 Settlement *Simulation::getSettlement(const string &settlementName)
 {
-    for (auto &settlement : settlements)
+    for (auto settlement : settlements)
     {
         if (settlement->getName() == settlementName)
         {

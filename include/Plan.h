@@ -10,7 +10,6 @@ enum class PlanStatus
     AVALIABLE,
     BUSY,
 };
-
 class Plan
 {
 public:

@@ -6,7 +6,6 @@
 #include "Facility.h"
 #include "Auxiliary.h"
 #include "Plan.h"
-#include "Action.h"
 #include "SelectionPolicy.h"
 #include "Settlement.h"
 using std::stoi;
