@@ -67,13 +67,13 @@ const int Plan::getEnvironmentScore() const
 // Set selection policy
 void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy)
 {
-    if (this->selectionPolicy == selectionPolicy) {
+    if (this->selectionPolicy == selectionPolicy)
+    {
         return; // Avoid redundant operations if they are the same
     }
     delete this->selectionPolicy; // Delete the old policy safely
     this->selectionPolicy = selectionPolicy;
 }
-
 
 // Step function
 void Plan::step()
@@ -119,7 +119,7 @@ const int Plan::getPlanId() const
 }
 
 // Print status
-void Plan::printStatus()
+void Plan::printStatus() const
 {
     std::cout << "PlanStatus: " << (status == PlanStatus::AVALIABLE ? "AVAILABLE" : "BUSY") << std::endl;
     std::cout << "SelectionPolicy: " << selectionPolicy->toString() << std::endl;
@@ -128,14 +128,14 @@ void Plan::printStatus()
     std::cout << "EnvironmentScore: " << environment_score << std::endl;
 
     std::cout << "Facilities under construction:" << std::endl;
-    for (const Facility* facility : underConstruction)
+    for (const Facility *facility : underConstruction)
     {
         std::cout << "FacilityName: " << facility->getName() << std::endl;
         std::cout << "FacilityStatus: " << (facility->getStatus() == FacilityStatus::UNDER_CONSTRUCTIONS ? "UNDER_CONSTRUCTIONS" : "OPERATIONAL") << std::endl;
     }
 
     std::cout << "Operational facilities:" << std::endl;
-    for (const Facility* facility : facilities)
+    for (const Facility *facility : facilities)
     {
         std::cout << "FacilityName: " << facility->getName() << std::endl;
         std::cout << "FacilityStatus: " << (facility->getStatus() == FacilityStatus::UNDER_CONSTRUCTIONS ? "UNDER_CONSTRUCTIONS" : "OPERATIONAL") << std::endl;
