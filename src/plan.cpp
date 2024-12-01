@@ -67,11 +67,13 @@ const int Plan::getEnvironmentScore() const
 // Set selection policy
 void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy)
 {
-     if (selectionPolicy) {  
-        delete selectionPolicy; 
+    if (this->selectionPolicy == selectionPolicy) {
+        return; // Avoid redundant operations if they are the same
     }
-    this->selectionPolicy = selectionPolicy; // Placeholder
+    delete this->selectionPolicy; // Delete the old policy safely
+    this->selectionPolicy = selectionPolicy;
 }
+
 
 // Step function
 void Plan::step()
