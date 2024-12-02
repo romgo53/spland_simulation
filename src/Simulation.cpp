@@ -182,12 +182,9 @@ void Simulation::open()
 {
     isRunning = true;
 }
-void Simulation::printActionsLog() const
+vector<BaseAction *> Simulation::getActionLog() const
 {
-    for (const auto &action : actionsLog)
-    {
-        std::cout << action->toString() << std::endl;
-    }
+    return actionsLog;
 }
 
 void Simulation::printPlansStatuses() const

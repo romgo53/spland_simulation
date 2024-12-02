@@ -1,8 +1,11 @@
 #pragma once
 #include <vector>
+#include <iostream>
 #include "Facility.h"
 #include "Settlement.h"
 #include "SelectionPolicy.h"
+using std::cout;
+using std::endl;
 using std::vector;
 
 enum class PlanStatus
@@ -16,7 +19,8 @@ public:
     Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
     Plan(const Plan &other);     // Copy Constructor
     Plan(Plan &&other) noexcept; // Move Constructor
-    ~Plan();                     // Destructor
+    ~Plan();                     // Destructors
+    Plan &operator=(const Plan &other) = delete;
     const int getlifeQualityScore() const;
     const int getEconomyScore() const;
     const int getEnvironmentScore() const;

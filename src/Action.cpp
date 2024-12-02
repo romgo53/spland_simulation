@@ -69,8 +69,7 @@ void AddPlan::act(Simulation &simulation)
         return;
     }
 
-    Settlement *settlement = simulation.getSettlement(settlementName);
-    simulation.addPlan(*settlement, policy);
+    simulation.addPlan(*simulation.getSettlement(settlementName), policy);
     complete();
 }
 
@@ -162,8 +161,8 @@ void PrintPlanStatus::act(Simulation &simulation)
         error("Plan does not exist");
         return;
     }
-    Plan &plan = simulation.getPlan(planId);
-    plan.printStatus();
+
+    (simulation.getPlan(planId)).printStatus();
 }
 PrintPlanStatus *PrintPlanStatus::clone() const { return new PrintPlanStatus(*this); }
 const string PrintPlanStatus::toString() const
@@ -183,7 +182,7 @@ ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy)
     : planId(planId), newPolicy(newPolicy) {}
 void ChangePlanPolicy::act(Simulation &simulation)
 {
-    Plan &plan = simulation.getPlan(planId);
+
     SelectionPolicy *policy = nullptr;
     if (newPolicy == "nve")
     {
@@ -206,7 +205,7 @@ void ChangePlanPolicy::act(Simulation &simulation)
         error("Cannot change selection policy: invalid policy.");
         return;
     }
-    plan.setSelectionPolicy(policy);
+    (simulation.getPlan(planId)).setSelectionPolicy(policy);
     complete();
 }
 ChangePlanPolicy *ChangePlanPolicy::clone() const { return new ChangePlanPolicy(*this); }
@@ -219,7 +218,10 @@ const string ChangePlanPolicy::toString() const
 PrintActionsLog::PrintActionsLog() {}
 void PrintActionsLog::act(Simulation &simulation)
 {
-    simulation.printActionsLog();
+    for (auto *action : simulation.getActionLog())
+    {
+        std::cout << action->toString() << std::endl;
+    }
     complete();
 }
 PrintActionsLog *PrintActionsLog::clone() const { return new PrintActionsLog(*this); }
@@ -252,7 +254,7 @@ void RestoreSimulation::act(Simulation &simulation)
 {
     if (backup != nullptr)
     {
-        simulation = *backup;
+        simulation = Simulation(*backup);
         complete();
     }
     else
