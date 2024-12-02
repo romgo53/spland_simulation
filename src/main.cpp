@@ -26,9 +26,11 @@ int main(int argc, char **argv)
         cout << "> ";
         getline(cin, command);
 
-        if (command == "exit")
+        if (command == "close")
         {
-            simulation.close();
+            BaseAction *close = new Close();
+            simulation.addAction(close);
+            close->act(simulation);
             break;
         }
 

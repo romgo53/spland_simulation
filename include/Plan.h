@@ -10,7 +10,6 @@ enum class PlanStatus
     AVALIABLE,
     BUSY,
 };
-
 class Plan
 {
 public:
@@ -24,7 +23,7 @@ public:
     void setSelectionPolicy(SelectionPolicy *selectionPolicy);
     void step();
     const int getPlanId() const;
-    void printStatus();
+    void printStatus() const;
     const vector<Facility *> &getFacilities() const;
     void addFacility(Facility *facility);
     const string toString() const;

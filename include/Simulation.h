@@ -6,7 +6,6 @@
 #include "Facility.h"
 #include "Auxiliary.h"
 #include "Plan.h"
-#include "Action.h"
 #include "SelectionPolicy.h"
 #include "Settlement.h"
 using std::stoi;
@@ -26,6 +25,7 @@ public:
     bool isPlanExists(int planID);
     bool addSettlement(Settlement *settlement);
     bool addFacility(FacilityType facility);
+    void printPlansStatuses() const;
     bool isSettlementExists(const string &settlementName);
     Settlement *getSettlement(const string &settlementName);
     Plan &getPlan(const int planID);
