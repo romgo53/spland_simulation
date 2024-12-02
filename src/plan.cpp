@@ -1,8 +1,5 @@
 #include "Plan.h"
-#include "Settlement.h"
-#include <iostream>
-using std::cout;
-using std::endl;
+
 // Constructor
 Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions)
     : plan_id(planId),
@@ -83,8 +80,7 @@ void Plan::step()
     {
         while (underConstruction.size() < constructionLimit)
         {
-            const FacilityType &nextFacility = selectionPolicy->selectFacility(facilityOptions);
-            Facility *facility = new Facility(nextFacility, settlement.getName());
+            Facility *facility = new Facility(selectionPolicy->selectFacility(facilityOptions), settlement.getName());
             underConstruction.push_back(facility);
         }
     }

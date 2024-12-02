@@ -83,24 +83,15 @@ int main(int argc, char **argv)
             }
             else if (action == "backup")
             {
-                if (backup != nullptr)
-                {
-                    delete backup;
-                }
-                backup = new Simulation(simulation);
-                cout << "Backup created successfully." << endl;
+                BaseAction *backupAction = new BackupSimulation();
+                simulation.addAction(backupAction);
+                backupAction->act(simulation);
             }
             else if (action == "restore")
             {
-                if (backup == nullptr)
-                {
-                    cout << "Error: No backup available." << endl;
-                }
-                else
-                {
-                    simulation = *backup;
-                    cout << "Simulation restored successfully." << endl;
-                }
+                BaseAction *restoreAction = new RestoreSimulation();
+                simulation.addAction(restoreAction);
+                restoreAction->act(simulation);
             }
             else
             {

@@ -32,7 +32,7 @@ public:
     void step();
     void close();
     void open();
-    void printActionsLog() const;
+    vector<BaseAction *> getActionLog() const;
 
 private:
     bool isRunning;
