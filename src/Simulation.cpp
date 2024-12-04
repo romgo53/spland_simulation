@@ -1,11 +1,78 @@
 #include "Simulation.h"
-// TODO: figure out how to implament start, open, close
 // Constructor
 
 Simulation::Simulation(const string &configFilePath)
-    : isRunning(false), planCounter(0)
+    : isRunning(false), planCounter(0), actionsLog(), plans(), settlements(), facilitiesOptions()
 {
     readConfigFile(configFilePath);
+}
+Simulation::Simulation(const Simulation &other)
+    : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(), plans(), settlements(), facilitiesOptions()
+{
+    for (const auto *settlement : other.settlements)
+    {
+        settlements.push_back(new Settlement(*settlement));
+    }
+    for (const auto &facility : other.facilitiesOptions)
+    {
+        facilitiesOptions.push_back(facility);
+    }
+    for (const auto &plan : other.plans)
+    {
+        plans.push_back(plan);
+    }
+    for (const auto *action : other.actionsLog)
+    {
+        actionsLog.push_back(action->clone());
+    }
+}
+// Assignment operator
+Simulation &Simulation::operator=(const Simulation &other)
+{
+    if (this != &other)
+    {
+        isRunning = other.isRunning;
+        planCounter = other.planCounter;
+        for (auto *settlement : settlements)
+        {
+            delete settlement;
+        }
+        settlements.clear();
+        for (auto *action : actionsLog)
+        {
+            delete action;
+        }
+        actionsLog.clear();
+        for (const auto *settlement : other.settlements)
+        {
+            settlements.push_back(new Settlement(*settlement));
+        }
+        for (const auto &facility : other.facilitiesOptions)
+        {
+            facilitiesOptions.push_back(facility);
+        }
+        for (const auto &plan : other.plans)
+        {
+            plans.push_back(plan);
+        }
+        for (const auto *action : other.actionsLog)
+        {
+            actionsLog.push_back(action->clone());
+        }
+    }
+    return *this;
+}
+// Destructor
+Simulation::~Simulation()
+{
+    for (auto *settlement : settlements)
+    {
+        delete settlement;
+    }
+    for (auto *action : actionsLog)
+    {
+        delete action;
+    }
 }
 
 // Read the configuration file
@@ -66,11 +133,104 @@ void Simulation::readPlanConfig(string settName, string policyName)
     }
     addPlan(*settlement, selectionPolicy);
 }
-
+// execute a command
+void Simulation::executeCommand(std::istringstream &commandStream, const string &action)
+{
+    if (action == "close")
+    {
+        BaseAction *close = new Close();
+        addAction(close);
+        close->act(*this);
+    }
+    else if (action == "step")
+    {
+        int steps;
+        commandStream >> steps;
+        BaseAction *step = new SimulateStep(steps);
+        addAction(step);
+        step->act(*this);
+    }
+    else if (action == "log")
+    {
+        BaseAction *printLog = new PrintActionsLog();
+        addAction(printLog);
+        printLog->act(*this);
+    }
+    else if (action == "plan")
+    {
+        string settlementName, policyName;
+        commandStream >> settlementName >> policyName;
+        BaseAction *addPlan = new AddPlan(settlementName, policyName);
+        addAction(addPlan);
+        addPlan->act(*this);
+    }
+    else if (action == "settlement")
+    {
+        string settlementName;
+        int settlementType;
+        commandStream >> settlementName >> settlementType;
+        SettlementType type = static_cast<SettlementType>(settlementType);
+        BaseAction *addSettlement = new AddSettlement(settlementName, type);
+        addAction(addSettlement);
+        addSettlement->act(*this);
+    }
+    else if (action == "changePolicy")
+    {
+        int planId = -1;
+        string newPolicy;
+        commandStream >> planId >> newPolicy;
+        BaseAction *changePolicy = new ChangePlanPolicy(planId, newPolicy);
+        addAction(changePolicy);
+        changePolicy->act(*this);
+    }
+    else if (action == "planStatus")
+    {
+        int planId = -1;
+        commandStream >> planId;
+        BaseAction *printPlan = new PrintPlanStatus(planId);
+        addAction(printPlan);
+        printPlan->act(*this);
+    }
+    else if (action == "facility")
+    {
+        string facilityName;
+        int facilityCategory, price, lifeQualityScore, economyScore, environmentScore;
+        commandStream >> facilityName >> facilityCategory >> price >> lifeQualityScore >> economyScore >> environmentScore;
+        BaseAction *addFacility = new AddFacility(facilityName, FacilityCategory(facilityCategory), price, lifeQualityScore, economyScore, environmentScore);
+        addAction(addFacility);
+        addFacility->act(*this);
+    }
+    else if (action == "backup")
+    {
+        BaseAction *backup = new BackupSimulation();
+        addAction(backup);
+        backup->act(*this);
+    }
+    else if (action == "restore")
+    {
+        BaseAction *restore = new RestoreSimulation();
+        addAction(restore);
+        restore->act(*this);
+    }
+    else
+    {
+        cout << "Invalid command!" << endl;
+    }
+}
 // Start the simulation??
 void Simulation::start()
 {
     isRunning = true;
+    while (isRunning)
+    {
+        string command;
+        cout << "> ";
+        std::getline(std::cin, command);
+        std::istringstream commandStream(command);
+        string action;
+        commandStream >> action;
+        executeCommand(commandStream, action);
+    }
 }
 // get a settlement by name
 Settlement *Simulation::getSettlement(const string &settlementName)
@@ -161,6 +321,7 @@ Plan &Simulation::getPlan(const int planID)
             return plan;
         }
     }
+    throw "Plan does not exist";
 }
 
 // Perform a simulation step
@@ -182,9 +343,12 @@ void Simulation::open()
 {
     isRunning = true;
 }
-vector<BaseAction *> Simulation::getActionLog() const
+void Simulation::printActionLog() const
 {
-    return actionsLog;
+    for (auto *action : actionsLog)
+    {
+        std::cout << action->toString() << std::endl;
+    }
 }
 
 void Simulation::printPlansStatuses() const

@@ -2,7 +2,7 @@
 #include "Action.h"
 extern Simulation *backup;
 // BaseAction
-BaseAction::BaseAction() {}
+BaseAction::BaseAction() : errorMsg(), status() {}
 ActionStatus BaseAction::getStatus() const { return status; }
 void BaseAction::complete()
 {
@@ -218,10 +218,7 @@ const string ChangePlanPolicy::toString() const
 PrintActionsLog::PrintActionsLog() {}
 void PrintActionsLog::act(Simulation &simulation)
 {
-    for (auto *action : simulation.getActionLog())
-    {
-        std::cout << action->toString() << std::endl;
-    }
+    simulation.printActionLog();
     complete();
 }
 PrintActionsLog *PrintActionsLog::clone() const { return new PrintActionsLog(*this); }
@@ -254,7 +251,8 @@ void RestoreSimulation::act(Simulation &simulation)
 {
     if (backup != nullptr)
     {
-        simulation = Simulation(*backup);
+        // Simulation sim = Simulation(*backup);
+        simulation = *backup;
         complete();
     }
     else

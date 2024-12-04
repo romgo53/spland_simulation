@@ -80,7 +80,7 @@ EconomySelection::EconomySelection() : lastSelectedIndex(0) {}
 const FacilityType &EconomySelection::selectFacility(const vector<FacilityType> &facilitiesOptions)
 {
     lastSelectedIndex++;
-    if (lastSelectedIndex >= facilitiesOptions.size())
+    if (static_cast<unsigned int>(lastSelectedIndex) >= facilitiesOptions.size())
     {
         lastSelectedIndex = 0;
     }
@@ -113,7 +113,7 @@ SustainabilitySelection::SustainabilitySelection() : lastSelectedIndex(0) {}
 const FacilityType &SustainabilitySelection::selectFacility(const vector<FacilityType> &facilitiesOptions)
 {
     lastSelectedIndex++;
-    if (lastSelectedIndex >= facilitiesOptions.size())
+    if (static_cast<unsigned int>(lastSelectedIndex) >= facilitiesOptions.size())
     {
         lastSelectedIndex = 0;
     }
