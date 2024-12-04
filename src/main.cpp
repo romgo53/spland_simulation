@@ -1,4 +1,6 @@
 #include "Simulation.h"
+#include "Action.h"
+
 #include <iostream>
 #include <sstream>
 #include <string>

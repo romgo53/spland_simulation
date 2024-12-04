@@ -12,6 +12,29 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
       environment_score(0),
       facilities(),
       underConstruction() {}
+Plan::Plan(const Plan &other)
+    : plan_id(other.plan_id),
+      settlement(other.settlement),
+      selectionPolicy(other.selectionPolicy ? other.selectionPolicy->clone() : nullptr),
+      status(other.status),
+      facilityOptions(other.facilityOptions),
+      life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score),
+      environment_score(other.environment_score) {
+    
+   
+    for (const auto &facility : other.facilities) {
+        facilities.push_back(new Facility(*facility)); // assuming Facility has a copy constructor
+    }
+
+    
+    for (const auto &facility : other.underConstruction) {
+        underConstruction.push_back(new Facility(*facility)); // assuming Facility has a copy constructor
+    }
+}
+
+
+     
 
 Plan::Plan(Plan &&other) noexcept
     : plan_id(other.plan_id),
