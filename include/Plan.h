@@ -21,6 +21,7 @@ public:
     Plan(Plan &&other) noexcept; // Move Constructor
     ~Plan();                     // Destructors
     Plan &operator=(const Plan &other) = delete;
+    Plan &operator=(Plan &&other) noexcept = delete;
     const int getlifeQualityScore() const;
     const int getEconomyScore() const;
     const int getEnvironmentScore() const;

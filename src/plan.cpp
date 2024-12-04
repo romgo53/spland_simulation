@@ -68,6 +68,7 @@ Plan::~Plan()
     underConstruction.clear();
 }
 
+
 // Getters for scores
 const int Plan::getlifeQualityScore() const
 {

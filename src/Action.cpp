@@ -203,6 +203,7 @@ void ChangePlanPolicy::act(Simulation &simulation)
     else
     {
         error("Cannot change selection policy: invalid policy.");
+        delete policy;
         return;
     }
     (simulation.getPlan(planId)).setSelectionPolicy(policy);
