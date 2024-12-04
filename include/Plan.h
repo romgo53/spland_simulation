@@ -17,9 +17,9 @@ class Plan
 {
 public:
     Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
-    Plan(const Plan &other);     // Copy Constructor
-    Plan(Plan &&other) noexcept; // Move Constructor
-    ~Plan();                     // Destructors
+    Plan(const Plan &other);
+    Plan(Plan &&other) noexcept;
+    ~Plan();
     Plan &operator=(const Plan &other) = delete;
     const int getlifeQualityScore() const;
     const int getEconomyScore() const;
@@ -40,5 +40,7 @@ private:
     vector<Facility *> facilities;
     vector<Facility *> underConstruction;
     const vector<FacilityType> &facilityOptions;
-    int life_quality_score, economy_score, environment_score;
+    int life_quality_score;
+    int economy_score;
+    int environment_score;
 };

@@ -8,6 +8,7 @@
 #include "Plan.h"
 #include "SelectionPolicy.h"
 #include "Settlement.h"
+#include "Action.h"
 using std::stoi;
 using std::string;
 using std::vector;
@@ -19,6 +20,9 @@ class Simulation
 {
 public:
     Simulation(const string &configFilePath);
+    Simulation(const Simulation &other);
+    Simulation &operator=(const Simulation &other);
+    ~Simulation();
     void start();
     void addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy);
     void addAction(BaseAction *action);
@@ -32,7 +36,8 @@ public:
     void step();
     void close();
     void open();
-    vector<BaseAction *> getActionLog() const;
+    void printActionLog() const;
+    // vector<BaseAction printActionLog() const;
 
 private:
     bool isRunning;
@@ -44,4 +49,5 @@ private:
     void readConfigFile(const string &configFilePath);
     void readPlanConfig(string settName, string policyName);
     bool isFacilityExists(const string &facilityName);
+    void executeCommand(std::istringstream &commandStream, const string &action);
 };

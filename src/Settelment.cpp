@@ -41,7 +41,7 @@ const string Settlement::getTypename(SettlementType type) const
         break;
 
     default:
-        break;
+        return "";
     }
 }
 const string Settlement::toString() const

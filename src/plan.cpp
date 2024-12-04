@@ -6,12 +6,14 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
       settlement(settlement),
       selectionPolicy(selectionPolicy ? selectionPolicy->clone() : nullptr),
       status(PlanStatus::AVALIABLE),
+      facilities(),
+      underConstruction(),
       facilityOptions(facilityOptions),
       life_quality_score(0),
       economy_score(0),
-      environment_score(0),
-      facilities(),
-      underConstruction() {}
+      environment_score(0)
+{
+}
 
 Plan::Plan(Plan &&other) noexcept
     : plan_id(other.plan_id),
@@ -26,6 +28,30 @@ Plan::Plan(Plan &&other) noexcept
       environment_score(other.environment_score)
 {
     other.selectionPolicy = nullptr;
+}
+
+Plan::Plan(const Plan &other)
+    : plan_id(other.plan_id),
+      settlement(other.settlement),
+      selectionPolicy(other.selectionPolicy ? other.selectionPolicy->clone() : nullptr),
+      status(other.status),
+      facilities(),
+      underConstruction(),
+      facilityOptions(other.facilityOptions),
+      life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score),
+      environment_score(other.environment_score)
+
+{
+    for (Facility *facility : other.facilities)
+    {
+        facilities.push_back(new Facility(*facility));
+    }
+
+    for (Facility *facility : other.underConstruction)
+    {
+        underConstruction.push_back(new Facility(*facility));
+    }
 }
 
 Plan::~Plan()
@@ -91,6 +117,9 @@ void Plan::step()
         if ((*it)->getStatus() == FacilityStatus::OPERATIONAL)
         {
             facilities.push_back(*it);
+            economy_score += (*it)->getEconomyScore();
+            life_quality_score += (*it)->getLifeQualityScore();
+            environment_score += (*it)->getEnvironmentScore();
             it = underConstruction.erase(it);
         }
         else
