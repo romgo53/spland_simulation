@@ -11,24 +11,7 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
       facilityOptions(facilityOptions),
       life_quality_score(0),
       economy_score(0),
-      environment_score(0)
-{
-}
-
-Plan::Plan(Plan &&other) noexcept
-    : plan_id(other.plan_id),
-      settlement(other.settlement),
-      selectionPolicy(other.selectionPolicy),
-      status(other.status),
-      facilities(std::move(other.facilities)),
-      underConstruction(std::move(other.underConstruction)),
-      facilityOptions(other.facilityOptions),
-      life_quality_score(other.life_quality_score),
-      economy_score(other.economy_score),
-      environment_score(other.environment_score)
-{
-    other.selectionPolicy = nullptr;
-}
+      environment_score(0) {}
 
 Plan::Plan(const Plan &other)
     : plan_id(other.plan_id),
@@ -52,6 +35,24 @@ Plan::Plan(const Plan &other)
     {
         underConstruction.push_back(new Facility(*facility));
     }
+}
+
+
+    
+
+Plan::Plan(Plan &&other) noexcept
+    : plan_id(other.plan_id),
+      settlement(other.settlement),
+      selectionPolicy(other.selectionPolicy),
+      status(other.status),
+      facilities(std::move(other.facilities)),
+      underConstruction(std::move(other.underConstruction)),
+      facilityOptions(other.facilityOptions),
+      life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score),
+      environment_score(other.environment_score)
+{
+    other.selectionPolicy = nullptr;
 }
 
 Plan::~Plan()
