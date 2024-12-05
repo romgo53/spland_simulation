@@ -6,6 +6,7 @@ Simulation::Simulation(const string &configFilePath)
 {
     readConfigFile(configFilePath);
 }
+// Copy constructor
 Simulation::Simulation(const Simulation &other)
     : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(), plans(), settlements(), facilitiesOptions()
 {
@@ -43,6 +44,8 @@ Simulation &Simulation::operator=(const Simulation &other)
             delete action;
         }
         actionsLog.clear();
+        facilitiesOptions.clear();
+        plans.clear();
         for (const auto *settlement : other.settlements)
         {
             settlements.push_back(new Settlement(*settlement));
@@ -104,34 +107,38 @@ void Simulation::readConfigFile(const string &configFilePath)
             readPlanConfig(arguments[1], arguments[2]);
         }
     }
+    file.close();
 }
 
 // Read the plan configuration
 void Simulation::readPlanConfig(string settName, string policyName)
 {
     Settlement *settlement = getSettlement(settName);
-    SelectionPolicy *selectionPolicy;
+    SelectionPolicy *policy = nullptr;
     if (policyName == "nve")
     {
-        selectionPolicy = new NaiveSelection();
+        policy = new NaiveSelection();
     }
     else if (policyName == "bal")
     {
-        selectionPolicy = new BalancedSelection(0, 0, 0);
+        policy = new BalancedSelection(0, 0, 0);
     }
     else if (policyName == "eco")
     {
-        selectionPolicy = new EconomySelection();
+        policy = new EconomySelection();
     }
     else if (policyName == "env")
     {
-        selectionPolicy = new SustainabilitySelection();
+        policy = new SustainabilitySelection();
     }
     else
     {
-        // TODO: throw error?
+        delete policy;
+        return;
     }
-    addPlan(*settlement, selectionPolicy);
+
+    addPlan(*settlement, policy);
+    delete policy;
 }
 // execute a command
 void Simulation::executeCommand(std::istringstream &commandStream, const string &action)
@@ -209,8 +216,8 @@ void Simulation::executeCommand(std::istringstream &commandStream, const string 
     else if (action == "restore")
     {
         BaseAction *restore = new RestoreSimulation();
-        addAction(restore);
         restore->act(*this);
+        addAction(restore);
     }
     else
     {
