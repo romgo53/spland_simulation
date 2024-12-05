@@ -52,6 +52,21 @@ Plan::Plan(Plan &&other) noexcept
     other.selectionPolicy = nullptr;
 }
 
+Plan::Plan(Plan &&other, const Settlement &settlement)
+    : plan_id(other.plan_id),
+      settlement(settlement),
+      selectionPolicy(other.selectionPolicy),
+      status(other.status),
+      facilities(std::move(other.facilities)),
+      underConstruction(std::move(other.underConstruction)),
+      facilityOptions(other.facilityOptions),
+      life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score),
+      environment_score(other.environment_score)
+{
+    other.selectionPolicy = nullptr;
+}
+
 Plan::~Plan()
 {
     delete selectionPolicy;
@@ -83,6 +98,16 @@ const int Plan::getEconomyScore() const
 const int Plan::getEnvironmentScore() const
 {
     return environment_score; // Placeholder
+}
+
+const Settlement &Plan::getSettlement() const
+{
+    return settlement;
+}
+
+const SelectionPolicy &Plan::getSelectionPolicy() const
+{
+    return *selectionPolicy;
 }
 
 // Set selection policy
@@ -171,10 +196,20 @@ void Plan::printStatus() const
     }
 }
 
+const PlanStatus Plan::getStatus() const
+{
+    return status;
+}
 // Get facilities
 const vector<Facility *> &Plan::getFacilities() const
 {
-    return facilities; // Placeholder
+    return facilities;
+}
+
+// Get under construction facilities
+const vector<Facility *> &Plan::getUnderConstruction() const
+{
+    return underConstruction;
 }
 
 // Add a facility
