@@ -65,11 +65,13 @@ void AddPlan::act(Simulation &simulation)
     }
     else
     {
+        delete policy;
         error("Cannot create this plan: invalid selection policy.");
         return;
     }
 
     simulation.addPlan(*simulation.getSettlement(settlementName), policy);
+    delete policy;
     complete();
 }
 
@@ -140,7 +142,7 @@ void AddFacility::act(Simulation &simulation)
 AddFacility *AddFacility::clone() const { return new AddFacility(*this); }
 const string AddFacility::toString() const
 {
-    string rtn = "AddFacility " + facilityName + to_string(price) + to_string(lifeQualityScore) + to_string(economyScore) + to_string(environmentScore);
+    string rtn = "AddFacility " + facilityName + to_string(price) + " " + to_string(lifeQualityScore) + " " + to_string(economyScore) + " " + to_string(environmentScore);
 
     if (getStatus() == ActionStatus::ERROR)
     {
@@ -239,6 +241,11 @@ const string Close::toString() const { return "Close COMPLETED"; }
 BackupSimulation::BackupSimulation() {}
 void BackupSimulation::act(Simulation &simulation)
 {
+    if (backup != nullptr)
+    {
+        delete backup;
+        backup = nullptr;
+    }
     backup = new Simulation(simulation);
     complete();
 }

@@ -37,9 +37,6 @@ Plan::Plan(const Plan &other)
     }
 }
 
-
-    
-
 Plan::Plan(Plan &&other) noexcept
     : plan_id(other.plan_id),
       settlement(other.settlement),
@@ -147,24 +144,30 @@ const int Plan::getPlanId() const
 // Print status
 void Plan::printStatus() const
 {
+    std::cout << toString() << std::endl;
     std::cout << "PlanStatus: " << (status == PlanStatus::AVALIABLE ? "AVAILABLE" : "BUSY") << std::endl;
     std::cout << "SelectionPolicy: " << selectionPolicy->toString() << std::endl;
     std::cout << "LifeQualityScore: " << life_quality_score << std::endl;
     std::cout << "EconomyScore: " << economy_score << std::endl;
     std::cout << "EnvironmentScore: " << environment_score << std::endl;
 
-    std::cout << "Facilities under construction:" << std::endl;
-    for (const Facility *facility : underConstruction)
+    if (underConstruction.size() > 0)
     {
-        std::cout << "FacilityName: " << facility->getName() << std::endl;
-        std::cout << "FacilityStatus: " << (facility->getStatus() == FacilityStatus::UNDER_CONSTRUCTIONS ? "UNDER_CONSTRUCTIONS" : "OPERATIONAL") << std::endl;
+        std::cout << "Facilities under construction:" << std::endl;
+        for (const Facility *facility : underConstruction)
+        {
+            std::cout << "FacilityName: " << facility->getName() << std::endl;
+            std::cout << "FacilityStatus: " << (facility->getStatus() == FacilityStatus::UNDER_CONSTRUCTIONS ? "UNDER_CONSTRUCTIONS" : "OPERATIONAL") << std::endl;
+        }
     }
-
-    std::cout << "Operational facilities:" << std::endl;
-    for (const Facility *facility : facilities)
+    if (facilities.size() > 0)
     {
-        std::cout << "FacilityName: " << facility->getName() << std::endl;
-        std::cout << "FacilityStatus: " << (facility->getStatus() == FacilityStatus::UNDER_CONSTRUCTIONS ? "UNDER_CONSTRUCTIONS" : "OPERATIONAL") << std::endl;
+        std::cout << "Operational facilities:" << std::endl;
+        for (const Facility *facility : facilities)
+        {
+            std::cout << "FacilityName: " << facility->getName() << std::endl;
+            std::cout << "FacilityStatus: " << (facility->getStatus() == FacilityStatus::UNDER_CONSTRUCTIONS ? "UNDER_CONSTRUCTIONS" : "OPERATIONAL") << std::endl;
+        }
     }
 }
 
@@ -183,29 +186,6 @@ void Plan::addFacility(Facility *facility)
 const string Plan::toString() const
 {
     string result = "PlanID: " + std::to_string(plan_id) + "\n";
-    result += "SettlementName: " + settlement.getName() + "\n";
-    result += "PlanStatus: " + std::string(status == PlanStatus::AVALIABLE ? "AVAILABLE" : "BUSY") + "\n";
-    result += "SelectionPolicy: " + (selectionPolicy ? selectionPolicy->toString() : "None") + "\n";
-    result += "LifeQualityScore: " + std::to_string(life_quality_score) + "\n";
-    result += "EconomyScore: " + std::to_string(economy_score) + "\n";
-    result += "EnvironmentScore: " + std::to_string(environment_score) + "\n";
-
-    result += "Facilities:\n";
-    for (const Facility *facility : facilities)
-    {
-        result += "  FacilityName: " + facility->getName() +
-                  ", FacilityStatus: " +
-                  (facility->getStatus() == FacilityStatus::UNDER_CONSTRUCTIONS ? "UNDER_CONSTRUCTIONS" : "OPERATIONAL") +
-                  "\n";
-    }
-
-    result += "Facilities Under Construction:\n";
-    for (const Facility *facility : underConstruction)
-    {
-        result += "  FacilityName: " + facility->getName() +
-                  ", TimeLeft: " + std::to_string(facility->getTimeLeft()) +
-                  "\n";
-    }
-
+    result += "SettlementName: " + settlement.getName();
     return result;
 }

@@ -1,11 +1,13 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <memory>
 #include "Simulation.h"
 enum class SettlementType;
 enum class FacilityCategory;
 class Simulation;
-using std::to_string;
+using namespace std;
+// using std::to_string;
 
 enum class ActionStatus
 {
