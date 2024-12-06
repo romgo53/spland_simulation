@@ -18,9 +18,16 @@ Simulation::Simulation(const Simulation &other)
     {
         facilitiesOptions.push_back(facility);
     }
-    for (const auto &plan : other.plans)
+    for (auto plan : other.plans)
     {
-        plans.push_back(plan);
+        for (const auto *settlement : settlements)
+        {
+            if (settlement->getName() == plan.getSettlement().getName())
+            {
+                plans.push_back(Plan(std::move(plan), *settlement));
+                break;
+            }
+        }
     }
     for (const auto *action : other.actionsLog)
     {
@@ -34,15 +41,12 @@ Simulation &Simulation::operator=(const Simulation &other)
     {
         isRunning = other.isRunning;
         planCounter = other.planCounter;
-        for (auto *settlement : settlements)
-        {
-            delete settlement;
-        }
-        settlements.clear();
+        vector<Settlement *> tempSettlements = settlements;
         for (auto *action : actionsLog)
         {
             delete action;
         }
+        settlements.clear();
         actionsLog.clear();
         facilitiesOptions.clear();
         plans.clear();
@@ -54,13 +58,27 @@ Simulation &Simulation::operator=(const Simulation &other)
         {
             facilitiesOptions.push_back(facility);
         }
-        for (const auto &plan : other.plans)
+        for (auto plan : other.plans)
         {
-            plans.push_back(plan);
+            for (const auto *settlement : settlements)
+            {
+                if (settlement->getName() == plan.getSettlement().getName())
+                {
+                    plans.push_back(Plan(std::move(plan), *settlement));
+                    break;
+                }
+            };
         }
         for (const auto *action : other.actionsLog)
         {
             actionsLog.push_back(action->clone());
+        }
+        for (auto *settlement : tempSettlements)
+        {
+            delete settlement;
+        }
+        for (auto plan : plans)
+        {
         }
     }
     return *this;
@@ -138,7 +156,6 @@ void Simulation::readPlanConfig(string settName, string policyName)
     }
 
     addPlan(*settlement, policy);
-    delete policy;
 }
 // execute a command
 void Simulation::executeCommand(std::istringstream &commandStream, const string &action)
@@ -255,6 +272,7 @@ Settlement *Simulation::getSettlement(const string &settlementName)
 void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy)
 {
     plans.push_back(Plan(planCounter++, settlement, selectionPolicy, facilitiesOptions));
+    delete selectionPolicy;
 }
 
 void Simulation::addAction(BaseAction *action)

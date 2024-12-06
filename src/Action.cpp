@@ -71,7 +71,6 @@ void AddPlan::act(Simulation &simulation)
     }
 
     simulation.addPlan(*simulation.getSettlement(settlementName), policy);
-    delete policy;
     complete();
 }
 
@@ -241,12 +240,12 @@ const string Close::toString() const { return "Close COMPLETED"; }
 BackupSimulation::BackupSimulation() {}
 void BackupSimulation::act(Simulation &simulation)
 {
-    if (backup != nullptr)
+    if (backup == nullptr)
     {
-        delete backup;
-        backup = nullptr;
+        backup = new Simulation(simulation);
     }
-    backup = new Simulation(simulation);
+    *backup = simulation;
+
     complete();
 }
 BackupSimulation *BackupSimulation::clone() const { return new BackupSimulation(*this); }
@@ -258,7 +257,6 @@ void RestoreSimulation::act(Simulation &simulation)
 {
     if (backup != nullptr)
     {
-        // Simulation sim = Simulation(*backup);
         simulation = *backup;
         complete();
     }
