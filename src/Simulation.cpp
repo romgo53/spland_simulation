@@ -24,8 +24,7 @@ Simulation::Simulation(const Simulation &other)
         {
             if (settlement->getName() == plan.getSettlement().getName())
             {
-                plans.push_back(Plan(plan.getPlanId(), *settlement, plan.getSelectionPolicy(), facilitiesOptions,
-                                     plan.getFacilities(), plan.getUnderConstruction(), plan.getlifeQualityScore(), plan.getEconomyScore(), plan.getEnvironmentScore(), plan.getStatus()));
+                plans.push_back(Plan(plan, *settlement));
                 break;
             }
         }
@@ -65,7 +64,7 @@ Simulation &Simulation::operator=(const Simulation &other)
             {
                 if (settlement->getName() == plan.getSettlement().getName())
                 {
-                    plans.push_back(Plan(std::move(plan), *settlement));
+                    plans.push_back(Plan(plan, *settlement));
                     break;
                 }
             };

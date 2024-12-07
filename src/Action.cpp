@@ -42,7 +42,7 @@ void AddPlan::act(Simulation &simulation)
 {
     if (!simulation.isSettlementExists(settlementName))
     {
-        error("Cannot create this plan: settlement does not exist.");
+        error("ERROR: Cannot create this plan: settlement does not exist.");
         return;
     }
 
@@ -66,7 +66,7 @@ void AddPlan::act(Simulation &simulation)
     else
     {
         delete policy;
-        error("Cannot create this plan: invalid selection policy.");
+        error("ERROR: Cannot create this plan: invalid selection policy.");
         return;
     }
 
@@ -89,7 +89,7 @@ void AddSettlement::act(Simulation &simulation)
 {
     if (simulation.isSettlementExists(settlementName))
     {
-        error("Settlement already exists");
+        error("ERROR: Settlement already exists");
         return;
     }
 
@@ -101,7 +101,7 @@ void AddSettlement::act(Simulation &simulation)
     }
     else
     {
-        error("Failed to add settlement");
+        error("ERROR: Failed to add settlement");
         delete newSettlement;
     }
 }
@@ -130,7 +130,7 @@ void AddFacility::act(Simulation &simulation)
     bool res = simulation.addFacility(facilityType);
     if (!res)
     {
-        error("Facility already exists");
+        error("ERROR: Facility already exists");
         return;
     }
     else
@@ -159,7 +159,7 @@ void PrintPlanStatus::act(Simulation &simulation)
 {
     if (!simulation.isPlanExists(planId))
     {
-        error("Plan does not exist");
+        error("ERROR: Plan does not exist");
         return;
     }
 
@@ -203,7 +203,7 @@ void ChangePlanPolicy::act(Simulation &simulation)
     }
     else
     {
-        error("Cannot change selection policy: invalid policy.");
+        error("ERROR: Cannot change selection policy: invalid policy.");
         return;
     }
     (simulation.getPlan(planId)).setSelectionPolicy(policy);
@@ -261,7 +261,7 @@ void RestoreSimulation::act(Simulation &simulation)
     }
     else
     {
-        error("No backup available");
+        error("ERROR: No backup available");
     }
 }
 RestoreSimulation *RestoreSimulation::clone() const { return new RestoreSimulation(*this); }

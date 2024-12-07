@@ -17,8 +17,7 @@ class Plan
 {
 public:
     Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
-    Plan(const int planId, const Settlement &settlement, const SelectionPolicy &selectionPolicy, const vector<FacilityType> &facilityOptions, const vector<Facility *> &_facilities, const vector<Facility *> &_underConstruction, const int lifeQualityScore, const int economyScore, const int environmentScore, const PlanStatus status);
-    Plan(Plan &&other, const Settlement &settlement);
+    Plan(const Plan &other, const Settlement &settlement);
     Plan(const Plan &other);
     Plan(Plan &&other) noexcept;
     ~Plan();

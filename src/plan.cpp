@@ -52,42 +52,25 @@ Plan::Plan(Plan &&other) noexcept
     other.selectionPolicy = nullptr;
 }
 
-Plan::Plan(Plan &&other, const Settlement &settlement)
+Plan::Plan(const Plan &other, const Settlement &settlement)
     : plan_id(other.plan_id),
       settlement(settlement),
-      selectionPolicy(other.selectionPolicy),
+      selectionPolicy(other.selectionPolicy ? other.selectionPolicy->clone() : nullptr),
       status(other.status),
-      facilities(std::move(other.facilities)),
-      underConstruction(std::move(other.underConstruction)),
+      facilities(),
+      underConstruction(),
       facilityOptions(other.facilityOptions),
       life_quality_score(other.life_quality_score),
       economy_score(other.economy_score),
       environment_score(other.environment_score)
-{
-    other.selectionPolicy = nullptr;
-}
 
-Plan::Plan(const int planId, const Settlement &settlement, const SelectionPolicy &selectionPolicy, const vector<FacilityType> &facilityOptions,
-           const vector<Facility *> &_facilities, const vector<Facility *> &_underConstruction, const int lifeQualityScore, const int economyScore, const int environmentScore, const PlanStatus status)
-    : plan_id(planId),
-      settlement(settlement),
-      selectionPolicy(nullptr),
-      status(status),
-      facilities(),
-      underConstruction(),
-      facilityOptions(facilityOptions),
-      life_quality_score(lifeQualityScore),
-      economy_score(economyScore),
-      environment_score(environmentScore)
 {
-    this->selectionPolicy = selectionPolicy.clone();
-
-    for (Facility *facility : _facilities)
+    for (Facility *facility : other.facilities)
     {
         facilities.push_back(new Facility(*facility));
     }
 
-    for (Facility *facility : _underConstruction)
+    for (Facility *facility : other.underConstruction)
     {
         underConstruction.push_back(new Facility(*facility));
     }
