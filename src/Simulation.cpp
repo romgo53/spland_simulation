@@ -381,3 +381,15 @@ void Simulation::printPlansStatuses() const
         plan.printStatus();
     }
 }
+
+void Simulation::printSummary() const
+{
+    for (const auto &plan : plans)
+    {
+        std::cout << "PlanId: " << plan.getPlanId() << std::endl;
+        std::cout << "SettlementName: " << plan.getSettlement().getName() << std::endl;
+        std::cout << "LifeQualityScore: " << plan.getlifeQualityScore() << std::endl;
+        std::cout << "EconomyScore: " << plan.getEconomyScore() << std::endl;
+        std::cout << "EnvironmentScore: " << plan.getEnvironmentScore() << std::endl;
+    }
+}

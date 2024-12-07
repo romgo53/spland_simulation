@@ -230,7 +230,7 @@ Close::Close() {}
 void Close::act(Simulation &simulation)
 {
     simulation.close();
-    simulation.printPlansStatuses();
+    simulation.printSummary();
     complete();
 }
 Close *Close::clone() const { return new Close(*this); }
