@@ -24,7 +24,7 @@ Simulation::Simulation(const Simulation &other)
         {
             if (settlement->getName() == plan.getSettlement().getName())
             {
-                plans.push_back(Plan(std::move(plan), *settlement));
+                plans.push_back(Plan((plan), *settlement));
                 break;
             }
         }
@@ -58,17 +58,17 @@ Simulation &Simulation::operator=(const Simulation &other)
         {
             facilitiesOptions.push_back(facility);
         }
-        for (auto plan : other.plans)
+          for (auto plan : other.plans)
+    {
+        for (const auto *settlement : settlements)
         {
-            for (const auto *settlement : settlements)
+            if (settlement->getName() == plan.getSettlement().getName())
             {
-                if (settlement->getName() == plan.getSettlement().getName())
-                {
-                    plans.push_back(Plan(std::move(plan), *settlement));
-                    break;
-                }
-            };
+                plans.push_back(Plan((plan), *settlement));
+                break;
+            }
         }
+    }
         for (const auto *action : other.actionsLog)
         {
             actionsLog.push_back(action->clone());

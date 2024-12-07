@@ -36,7 +36,29 @@ Plan::Plan(const Plan &other)
         underConstruction.push_back(new Facility(*facility));
     }
 }
+Plan::Plan(const Plan &other, const Settlement &settlement)
+    : plan_id(other.plan_id),
+      settlement(settlement),
+      selectionPolicy(other.selectionPolicy ? other.selectionPolicy->clone() : nullptr),
+      status(other.status),
+      facilities(),
+      underConstruction(),
+      facilityOptions(other.facilityOptions),
+      life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score),
+      environment_score(other.environment_score)
 
+{
+    for (Facility *facility : other.facilities)
+    {
+        facilities.push_back(new Facility(*facility));
+    }
+
+    for (Facility *facility : other.underConstruction)
+    {
+        underConstruction.push_back(new Facility(*facility));
+    }
+}
 Plan::Plan(Plan &&other) noexcept
     : plan_id(other.plan_id),
       settlement(other.settlement),

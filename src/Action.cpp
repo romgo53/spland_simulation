@@ -240,11 +240,11 @@ const string Close::toString() const { return "Close COMPLETED"; }
 BackupSimulation::BackupSimulation() {}
 void BackupSimulation::act(Simulation &simulation)
 {
-    if (backup == nullptr)
+    if (backup != nullptr)
     {
-        backup = new Simulation(simulation);
+        delete backup;
     }
-    *backup = simulation;
+        backup = new Simulation(simulation);
 
     complete();
 }
@@ -258,6 +258,7 @@ void RestoreSimulation::act(Simulation &simulation)
     if (backup != nullptr)
     {
         simulation = *backup;
+
         complete();
     }
     else
