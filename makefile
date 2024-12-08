@@ -2,16 +2,8 @@ all: link
 
 link: compile
 	echo "Linking"
-	g++ -o bin/main bin/main.o bin/Action.o bin/Auxiliary.o bin/Facility.o bin/Plan.o bin/SelectionPolicy.o bin/Settelment.o bin/Simulation.o
+	g++ -o bin/simulation bin/main.o bin/Action.o bin/Auxiliary.o bin/Facility.o bin/Plan.o bin/SelectionPolicy.o bin/Settelment.o bin/Simulation.o
 
-test: compile-test
-	@echo "Linking tests"
-	g++ -o bin/test bin/testing.o bin/Action.o bin/Auxiliary.o bin/Facility.o bin/Plan.o bin/SelectionPolicy.o bin/Settelment.o bin/Simulation.o
-
-compile-test: compile
-	@echo "Compiling tests"
-	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/testing.o src/testing.cpp 
-	
 compile:
 	@echo "Compiling"
 	g++ -g -c -Wall -Weffc++ -std=c++11 -Iinclude -o bin/Auxiliary.o src/Auxiliary.cpp

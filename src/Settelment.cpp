@@ -27,23 +27,6 @@ int Settlement::getConstructionLimit() const
     }
 }
 
-const string Settlement::getTypename(SettlementType type) const
-{
-    switch (type)
-    {
-    case SettlementType::VILLAGE:
-        return "Village";
-    case SettlementType::CITY:
-        return "City";
-    case SettlementType::METROPOLIS:
-        return "Metropolis";
-
-        break;
-
-    default:
-        return "";
-    }
-}
 const string Settlement::toString() const
 {
     return "SettlementName: " + name;
