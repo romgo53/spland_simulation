@@ -37,7 +37,7 @@ public:
     void close();
     void open();
     void printActionLog() const;
-    // vector<BaseAction printActionLog() const;
+    void printSummary() const;
 
 private:
     bool isRunning;

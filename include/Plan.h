@@ -17,12 +17,11 @@ class Plan
 {
 public:
     Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
-    Plan(Plan &&other, const Settlement &settlement);
+    Plan(const Plan &other, const Settlement &settlement);
     Plan(const Plan &other);
     Plan(Plan &&other) noexcept;
     ~Plan();
-    Plan &operator=(const Plan &other);
-    Plan &operator=(Plan &&other) noexcept;
+    Plan &operator=(const Plan &other) = delete;
     const int getlifeQualityScore() const;
     const int getEconomyScore() const;
     const int getEnvironmentScore() const;

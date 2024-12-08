@@ -52,19 +52,28 @@ Plan::Plan(Plan &&other) noexcept
     other.selectionPolicy = nullptr;
 }
 
-Plan::Plan(Plan &&other, const Settlement &settlement)
+Plan::Plan(const Plan &other, const Settlement &settlement)
     : plan_id(other.plan_id),
       settlement(settlement),
-      selectionPolicy(other.selectionPolicy),
+      selectionPolicy(other.selectionPolicy ? other.selectionPolicy->clone() : nullptr),
       status(other.status),
-      facilities(std::move(other.facilities)),
-      underConstruction(std::move(other.underConstruction)),
+      facilities(),
+      underConstruction(),
       facilityOptions(other.facilityOptions),
       life_quality_score(other.life_quality_score),
       economy_score(other.economy_score),
       environment_score(other.environment_score)
+
 {
-    other.selectionPolicy = nullptr;
+    for (Facility *facility : other.facilities)
+    {
+        facilities.push_back(new Facility(*facility));
+    }
+
+    for (Facility *facility : other.underConstruction)
+    {
+        underConstruction.push_back(new Facility(*facility));
+    }
 }
 
 Plan::~Plan()

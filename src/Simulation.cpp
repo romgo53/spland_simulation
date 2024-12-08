@@ -18,13 +18,13 @@ Simulation::Simulation(const Simulation &other)
     {
         facilitiesOptions.push_back(facility);
     }
-    for (auto plan : other.plans)
+    for (const auto &plan : other.plans)
     {
         for (const auto *settlement : settlements)
         {
             if (settlement->getName() == plan.getSettlement().getName())
             {
-                plans.push_back(Plan(std::move(plan), *settlement));
+                plans.push_back(Plan(plan, *settlement));
                 break;
             }
         }
@@ -64,7 +64,7 @@ Simulation &Simulation::operator=(const Simulation &other)
             {
                 if (settlement->getName() == plan.getSettlement().getName())
                 {
-                    plans.push_back(Plan(std::move(plan), *settlement));
+                    plans.push_back(Plan(plan, *settlement));
                     break;
                 }
             };
@@ -76,9 +76,6 @@ Simulation &Simulation::operator=(const Simulation &other)
         for (auto *settlement : tempSettlements)
         {
             delete settlement;
-        }
-        for (auto plan : plans)
-        {
         }
     }
     return *this;
@@ -163,30 +160,30 @@ void Simulation::executeCommand(std::istringstream &commandStream, const string 
     if (action == "close")
     {
         BaseAction *close = new Close();
-        addAction(close);
         close->act(*this);
+        addAction(close);
     }
     else if (action == "step")
     {
         int steps;
         commandStream >> steps;
         BaseAction *step = new SimulateStep(steps);
-        addAction(step);
         step->act(*this);
+        addAction(step);
     }
     else if (action == "log")
     {
         BaseAction *printLog = new PrintActionsLog();
-        addAction(printLog);
         printLog->act(*this);
+        addAction(printLog);
     }
     else if (action == "plan")
     {
         string settlementName, policyName;
         commandStream >> settlementName >> policyName;
         BaseAction *addPlan = new AddPlan(settlementName, policyName);
-        addAction(addPlan);
         addPlan->act(*this);
+        addAction(addPlan);
     }
     else if (action == "settlement")
     {
@@ -195,8 +192,8 @@ void Simulation::executeCommand(std::istringstream &commandStream, const string 
         commandStream >> settlementName >> settlementType;
         SettlementType type = static_cast<SettlementType>(settlementType);
         BaseAction *addSettlement = new AddSettlement(settlementName, type);
-        addAction(addSettlement);
         addSettlement->act(*this);
+        addAction(addSettlement);
     }
     else if (action == "changePolicy")
     {
@@ -204,16 +201,16 @@ void Simulation::executeCommand(std::istringstream &commandStream, const string 
         string newPolicy;
         commandStream >> planId >> newPolicy;
         BaseAction *changePolicy = new ChangePlanPolicy(planId, newPolicy);
-        addAction(changePolicy);
         changePolicy->act(*this);
+        addAction(changePolicy);
     }
     else if (action == "planStatus")
     {
         int planId = -1;
         commandStream >> planId;
         BaseAction *printPlan = new PrintPlanStatus(planId);
-        addAction(printPlan);
         printPlan->act(*this);
+        addAction(printPlan);
     }
     else if (action == "facility")
     {
@@ -221,14 +218,14 @@ void Simulation::executeCommand(std::istringstream &commandStream, const string 
         int facilityCategory, price, lifeQualityScore, economyScore, environmentScore;
         commandStream >> facilityName >> facilityCategory >> price >> lifeQualityScore >> economyScore >> environmentScore;
         BaseAction *addFacility = new AddFacility(facilityName, FacilityCategory(facilityCategory), price, lifeQualityScore, economyScore, environmentScore);
-        addAction(addFacility);
         addFacility->act(*this);
+        addAction(addFacility);
     }
     else if (action == "backup")
     {
         BaseAction *backup = new BackupSimulation();
-        addAction(backup);
         backup->act(*this);
+        addAction(backup);
     }
     else if (action == "restore")
     {
@@ -381,5 +378,17 @@ void Simulation::printPlansStatuses() const
     for (const auto &plan : plans)
     {
         plan.printStatus();
+    }
+}
+
+void Simulation::printSummary() const
+{
+    for (const auto &plan : plans)
+    {
+        std::cout << "PlanId: " << plan.getPlanId() << std::endl;
+        std::cout << "SettlementName: " << plan.getSettlement().getName() << std::endl;
+        std::cout << "LifeQualityScore: " << plan.getlifeQualityScore() << std::endl;
+        std::cout << "EconomyScore: " << plan.getEconomyScore() << std::endl;
+        std::cout << "EnvironmentScore: " << plan.getEnvironmentScore() << std::endl;
     }
 }
