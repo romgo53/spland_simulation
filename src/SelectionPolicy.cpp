@@ -18,6 +18,7 @@ const string NaiveSelection::toString() const
 
 NaiveSelection *NaiveSelection::clone() const
 {
+
     return new NaiveSelection(*this);
 }
 

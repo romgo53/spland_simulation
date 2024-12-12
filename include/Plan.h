@@ -30,10 +30,7 @@ public:
     void step();
     const int getPlanId() const;
     const Settlement &getSettlement() const;
-    const SelectionPolicy &getSelectionPolicy() const;
     void printStatus() const;
-    const vector<Facility *> &getFacilities() const;
-    const vector<Facility *> &getUnderConstruction() const;
     void addFacility(Facility *facility);
     const string toString() const;
 

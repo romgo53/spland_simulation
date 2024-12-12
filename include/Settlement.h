@@ -13,16 +13,16 @@ enum class SettlementType
     METROPOLIS,
 };
 
-class Settlement {
-    public:
-        Settlement(const string &name, SettlementType type);
-        const string &getName() const;
-        SettlementType getType() const;
-        const string toString() const;
-        int getConstructionLimit() const;
+class Settlement
+{
+public:
+    Settlement(const string &name, SettlementType type);
+    const string &getName() const;
+    SettlementType getType() const;
+    const string toString() const;
+    int getConstructionLimit() const;
 
 private:
     const string name;
     SettlementType type;
-    const string getTypename(SettlementType type) const;
 };
